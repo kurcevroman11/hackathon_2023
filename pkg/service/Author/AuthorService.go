@@ -3,16 +3,17 @@ package Author
 import (
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
+	"github.com/zhashkevych/todo-app/pkg/tools"
 	"gorm.io/gorm/logger"
 )
 
 type AuthorService struct {
 	rep    *repository.Repository
-	gen    *string
+	gen    *tools.UUIDStringGenerator
 	Logger logger.Interface
 }
 
-func NewAuthorService(rep *repository.Repository, gen *string, Logger logger.Interface) AuthorService {
+func NewAuthorService(rep *repository.Repository, gen *tools.UUIDStringGenerator, Logger logger.Interface) AuthorService {
 	return AuthorService{
 		rep:    rep,
 		gen:    gen,

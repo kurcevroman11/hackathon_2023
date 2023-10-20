@@ -5,17 +5,18 @@ import (
 	"github.com/boombuler/barcode/qr"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
+	"github.com/zhashkevych/todo-app/pkg/tools"
 	"gorm.io/gorm/logger"
 	"time"
 )
 
 type ArticleService struct {
 	rep    *repository.Repository
-	gen    *string
+	gen    *tools.UUIDStringGenerator
 	Logger logger.Interface
 }
 
-func NewArticleService(rep *repository.Repository, gen *string, Logger logger.Interface) ArticleService {
+func NewArticleService(rep *repository.Repository, gen *tools.UUIDStringGenerator, Logger logger.Interface) ArticleService {
 	return ArticleService{
 		rep:    rep,
 		gen:    gen,
@@ -24,6 +25,7 @@ func NewArticleService(rep *repository.Repository, gen *string, Logger logger.In
 }
 
 func (a ArticleService) Create(article *models.Article) (*models.Article, error) {
+	article.ID = a.gen.GenerateUUID()
 	return a.rep.ArticleRepository.Create(article)
 }
 
