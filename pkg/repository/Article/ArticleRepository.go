@@ -12,7 +12,7 @@ type ArticleRepository struct {
 	Logger logger.Interface
 }
 
-func NewArticleRepository(db *gorm.DB, gen *string, Logger logger.Interface) ArticleRepository {
+func NewArticleRepository(db *gorm.DB, Logger logger.Interface) ArticleRepository {
 	return ArticleRepository{
 		db:     db,
 		Logger: Logger,

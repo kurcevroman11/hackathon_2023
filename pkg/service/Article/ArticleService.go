@@ -45,8 +45,8 @@ func (a ArticleService) Delete(id string) (bool, error) {
 func (a ArticleService) FakeData() (*models.Article, error) {
 
 	dest := models.Article{
-		ID:              "test",
-		Title:           "Test_Title",
+		ID:              "test1",
+		Title:           "<h1>Test_Title</h1>",
 		Content:         "Test_Title",
 		PublicationDate: "Test_Data",
 		AuthorID:        "",

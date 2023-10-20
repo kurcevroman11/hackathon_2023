@@ -37,11 +37,11 @@ type Repository struct {
 	AuthorRepository
 }
 
-func NewRepository(db *gorm.DB, gen *string, Logger logger.Interface) *Repository {
+func NewRepository(db *gorm.DB, Logger logger.Interface) *Repository {
 	return &Repository{
-		ArticleRepository:  Article.NewArticleRepository(db, gen, Logger),
-		CategoryRepository: Category.NewCategoryRepository(db, gen, Logger),
-		AuthorRepository:   Author.NewAuthorRepository(db, gen, Logger),
+		ArticleRepository:  Article.NewArticleRepository(db, Logger),
+		CategoryRepository: Category.NewCategoryRepository(db, Logger),
+		AuthorRepository:   Author.NewAuthorRepository(db, Logger),
 	}
 
 }

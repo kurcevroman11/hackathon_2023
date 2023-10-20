@@ -12,7 +12,7 @@ type AuthorRepository struct {
 	Logger logger.Interface
 }
 
-func NewAuthorRepository(db *gorm.DB, gen *string, Logger logger.Interface) AuthorRepository {
+func NewAuthorRepository(db *gorm.DB, Logger logger.Interface) AuthorRepository {
 	return AuthorRepository{
 		db:     db,
 		Logger: Logger,
