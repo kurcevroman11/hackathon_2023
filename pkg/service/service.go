@@ -7,7 +7,6 @@ import (
 //go:generate mockgen -source=service.go -destination=mocks/mock.go
 
 type AuthorService interface {
-	Create
 }
 type CategoryService interface {
 }
