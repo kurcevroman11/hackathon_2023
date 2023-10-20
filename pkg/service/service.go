@@ -20,11 +20,13 @@ type ArticleService interface {
 	Delete(id string) (bool, error)
 }
 type AuthorService interface {
+
 	Create(author models.Author) (*models.Author, error)
 	Update(id string, author models.Author) (*models.Author, error)
 	GetById(id string) (*models.Author, error)
 	GetAll() ([]*models.Author, error)
 	Delete(id string) (bool, error)
+
 }
 type CategoryService interface {
 	Create() (*models.Category, error)
