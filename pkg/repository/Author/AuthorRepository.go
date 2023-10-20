@@ -7,9 +7,16 @@ import (
 )
 
 type AuthorRepository struct {
-	db     *gorm.DB
-	gen    string
+	db *gorm.DB
+
 	Logger logger.Interface
+}
+
+func NewAuthorRepository(db *gorm.DB, gen *string, Logger logger.Interface) AuthorRepository {
+	return AuthorRepository{
+		db:     db,
+		Logger: Logger,
+	}
 }
 
 func (a AuthorRepository) Create(author models.Author) (*models.Author, error) {

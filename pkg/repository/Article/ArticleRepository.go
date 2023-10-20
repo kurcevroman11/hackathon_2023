@@ -8,8 +8,14 @@ import (
 
 type ArticleRepository struct {
 	db     *gorm.DB
-	gen    string
 	Logger logger.Interface
+}
+
+func NewArticleRepository(db *gorm.DB, gen *string, Logger logger.Interface) ArticleRepository {
+	return ArticleRepository{
+		db:     db,
+		Logger: Logger,
+	}
 }
 
 func (a ArticleRepository) Create() (*models.Article, error) {

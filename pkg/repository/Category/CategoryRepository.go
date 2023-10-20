@@ -12,6 +12,13 @@ type CategoryRepository struct {
 	Logger logger.Interface
 }
 
+func NewCategoryRepository(db *gorm.DB, gen *string, Logger logger.Interface) CategoryRepository {
+	return CategoryRepository{
+		db:     db,
+		Logger: Logger,
+	}
+}
+
 func (c CategoryRepository) Create() (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")

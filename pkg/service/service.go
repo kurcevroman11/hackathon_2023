@@ -6,6 +6,7 @@ import (
 	"github.com/zhashkevych/todo-app/pkg/service/Article"
 	"github.com/zhashkevych/todo-app/pkg/service/Author"
 	"github.com/zhashkevych/todo-app/pkg/service/Category"
+	"gorm.io/gorm/logger"
 )
 
 //go:generate mockgen -source=service.go -destination=mocks/mock.go
@@ -38,10 +39,10 @@ type Service struct {
 	ArticleService
 }
 
-func NewService(repos *repository.Repository) *Service {
+func NewService(repos *repository.Repository, gen *string, Logger logger.Interface) *Service {
 	return &Service{
-		ArticleService:  Article.NewArticleService(repos, nil, nil),
-		AuthorService:   Author.NewAuthorService(repos, nil, nil),
-		CategoryService: Category.NewCategoryService(repos, nil, nil),
+		ArticleService:  Article.NewArticleService(repos, gen, Logger),
+		AuthorService:   Author.NewAuthorService(repos, gen, Logger),
+		CategoryService: Category.NewCategoryService(repos, gen, Logger),
 	}
 }

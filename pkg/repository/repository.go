@@ -2,7 +2,11 @@ package repository
 
 import (
 	"github.com/zhashkevych/todo-app/pkg/models"
+	"github.com/zhashkevych/todo-app/pkg/repository/Article"
+	"github.com/zhashkevych/todo-app/pkg/repository/Author"
+	"github.com/zhashkevych/todo-app/pkg/repository/Category"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type ArticleRepository interface {
@@ -33,6 +37,11 @@ type Repository struct {
 	AuthorRepository
 }
 
-func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{}
+func NewRepository(db *gorm.DB, gen *string, Logger logger.Interface) *Repository {
+	return &Repository{
+		ArticleRepository:  Article.NewArticleRepository(db, gen, Logger),
+		CategoryRepository: Category.NewCategoryRepository(db, gen, Logger),
+		AuthorRepository:   Author.NewAuthorRepository(db, gen, Logger),
+	}
+
 }
