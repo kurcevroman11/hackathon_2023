@@ -1,6 +1,8 @@
 package Category
 
-import "github.com/zhashkevych/todo-app/pkg/models"
+import (
+	"github.com/zhashkevych/todo-app/pkg/models"
+)
 
 type CategoryServiceMock struct {
 }

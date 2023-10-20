@@ -1,6 +1,8 @@
 package Author
 
-import "github.com/zhashkevych/todo-app/pkg/models"
+import (
+	"github.com/zhashkevych/todo-app/pkg/models"
+)
 
 type AuthorRepositoryMock struct {
 }
