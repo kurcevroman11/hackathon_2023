@@ -8,6 +8,12 @@ import (
 	"net/http"
 )
 
+// GetArticles @Summary Получить все статьи
+// @Description Получение списка всех статей
+// @Tags Articles
+// @Produce json
+// @Success 200 {array} models.Article
+// @Router /articles [get]
 func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Создание экземпляра структуры
 	data, err := h.services.ArticleService.GetAll()

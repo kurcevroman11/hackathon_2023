@@ -1,50 +1,51 @@
 basePath: /
 definitions:
-  handler.errorResponse:
+  models.Article:
     properties:
-      message:
-        type: string
-    type: object
-  handler.getAllListsResponse:
-    properties:
-      data:
+      author:
+        $ref: '#/definitions/models.Author'
+      categories:
         items:
-          $ref: '#/definitions/todo.TodoList'
+          $ref: '#/definitions/models.Category'
         type: array
-    type: object
-  handler.signInInput:
-    properties:
-      password:
+      content:
         type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  todo.TodoList:
-    properties:
-      description:
+      created_at:
         type: string
       id:
-        type: integer
+        type: string
+      publication_date:
+        type: string
       title:
         type: string
-    required:
-    - title
+      updated_at:
+        type: string
     type: object
-  todo.User:
+  models.Author:
     properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Category:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
       name:
         type: string
-      password:
+      updated_at:
         type: string
-      username:
-        type: string
-    required:
-    - name
-    - password
-    - username
     type: object
 host: localhost:8000
 info:
@@ -53,158 +54,20 @@ info:
   title: Todo App API
   version: "1.0"
 paths:
-  /api/lists:
+  /articles:
     get:
-      consumes:
-      - application/json
-      description: get all lists
-      operationId: get-all-lists
+      description: Получение списка всех статей
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.getAllListsResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        "404":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Get All Lists
+            items:
+              $ref: '#/definitions/models.Article'
+            type: array
       tags:
-      - lists
-    post:
-      consumes:
-      - application/json
-      description: create todo list
-      operationId: create-list
-      parameters:
-      - description: list info
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/todo.TodoList'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: integer
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        "404":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Create todo list
-      tags:
-      - lists
-  /auth/sign-in:
-    post:
-      consumes:
-      - application/json
-      description: login
-      operationId: login
-      parameters:
-      - description: credentials
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/handler.signInInput'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: token
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        "404":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-      summary: SignIn
-      tags:
-      - auth
-  /auth/sign-up:
-    post:
-      consumes:
-      - application/json
-      description: create account
-      operationId: create-account
-      parameters:
-      - description: account info
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/todo.User'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: integer
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        "404":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/handler.errorResponse'
-      summary: SignUp
-      tags:
-      - auth
+      - Articles
 securityDefinitions:
   ApiKeyAuth:
     in: header
