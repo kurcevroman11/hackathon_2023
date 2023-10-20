@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"github.com/alecthomas/template"
+	"github.com/zhashkevych/todo-app/pkg/models"
 	"log"
 	"net/http"
 )
@@ -45,5 +46,14 @@ func (h *Handler) MainPaig(w http.ResponseWriter, r *http.Request) {
 		log.Print("err :", err.Error())
 		return
 	}
-	tmpl.ExecuteTemplate(w, "index", nil)
+
+	articles, err := h.services.ArticleService.GetAll()
+
+	data := struct {
+		Articles []*models.Article
+	}{
+		Articles: articles,
+	}
+
+	tmpl.ExecuteTemplate(w, "index", data)
 }

@@ -10,8 +10,7 @@ require (
 	github.com/go-chi/chi v1.5.5
 	github.com/go-openapi/spec v0.20.0 // indirect
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
-	github.com/gofrs/uuid v4.4.0+incompatible // indirect
-	github.com/golang/mock v1.4.4
+	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/lib/pq v1.1.1
