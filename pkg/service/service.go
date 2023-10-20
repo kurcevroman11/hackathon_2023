@@ -16,6 +16,7 @@ type ArticleService interface {
 	Update(id string, article models.Article) (*models.Article, error)
 	GetById(id string) (*models.Article, error)
 	GetAll() ([]*models.Article, error)
+	GenerateQRCode(text string, filename string) error
 	Delete(id string) (bool, error)
 }
 type AuthorService interface {

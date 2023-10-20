@@ -1,6 +1,8 @@
 package Article
 
 import (
+	"github.com/boombuler/barcode"
+	"github.com/boombuler/barcode/qr"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
 	"gorm.io/gorm/logger"
@@ -38,4 +40,26 @@ func (a ArticleService) GetAll() ([]*models.Article, error) {
 
 func (a ArticleService) Delete(id string) (bool, error) {
 	return a.rep.ArticleRepository.Delete(id)
+}
+
+func (a ArticleService) GenerateQRCode(id string) (barcode.Barcode, error) {
+	article, err := a.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	// Создаем QR-код из текста
+	qrCode, err := qr.Encode(article.Title, qr.M, qr.Auto)
+	if err != nil {
+		return nil, err
+	}
+
+	// Устанавливаем размер QR-кода (по умолчанию 256x256)
+	qrCode, err = barcode.Scale(qrCode, 256, 256)
+	if err != nil {
+		return nil, err
+	}
+
+	return qrCode, err
+
 }
