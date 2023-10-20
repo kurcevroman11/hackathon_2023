@@ -1,0 +1,41 @@
+version: '2.2'
+services:
+  section:
+    extends:
+      service: section
+      file: ./common.yml
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    image: section-service
+
+
+  db:
+    extends:
+      service: sectiondb
+      file: ./common.yml
+    ports:
+      - 5433:5432
+    volumes:
+      - service_section_pg_data:/var/lib/postgresql/data
+    environment:
+      - TZ=Europe/Moscow
+      - POSTGRES_USER=section
+      - POSTGRES_PASSWORD=section
+      - POSTGRES_DB=section
+
+  sectiontestdb:
+    image: postgres:10.5-alpine
+    ports:
+      - 25432:5432
+    tmpfs: /var/lib/postgresql/data
+    environment:
+      - TZ=Europe/Moscow
+      - POSTGRES_USER=section
+      - POSTGRES_PASSWORD=section
+      - POSTGRES_DB=section
+
+volumes:
+  service_section_pg_data:
+  service_files_files:

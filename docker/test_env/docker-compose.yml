@@ -1,0 +1,29 @@
+version: '2.2'
+services:
+  db:
+    build:
+      dockerfile: Dockerfile
+      context: postgres
+    ports:
+      - 5433:5432
+    environment:
+      - TZ=Europe/Moscow
+      - POSTGRES_USER=section
+      - POSTGRES_PASSWORD=section
+      - POSTGRES_DB=section
+
+
+  sectiontestdb:
+    image: postgres:10.5-alpine
+    ports:
+      - 25432:5432
+    tmpfs: /var/lib/postgresql/data
+    environment:
+      - TZ=Europe/Moscow
+      - POSTGRES_USER=section
+      - POSTGRES_PASSWORD=section
+      - POSTGRES_DB=section
+
+
+
+
