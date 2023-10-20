@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"github.com/alecthomas/template"
+	"github.com/zhashkevych/todo-app/pkg/models"
 	"log"
 	"net/http"
 )
@@ -46,4 +47,22 @@ func (h *Handler) MainPaig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	tmpl.ExecuteTemplate(w, "index", nil)
+}
+func (h *Handler) InputPaig(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("templates/form.html", "templates/head.html", "templates/header.html", "templates/footer.html")
+
+	if err != nil {
+		log.Print("err :", err.Error())
+		return
+	}
+	tmpl.ExecuteTemplate(w, "index", nil)
+}
+func (h *Handler) savePaig(w http.ResponseWriter, r *http.Request) {
+	title := r.FormValue("title")
+	content := r.FormValue("content")
+
+	dest := models.Article{
+		Title: title, Content: content, AuthorID: "test"}
+
+	h.services.ArticleService.Create(&dest)
 }

@@ -19,6 +19,8 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	router := chi.NewRouter()
 
 	router.Get("/", h.MainPaig)
+	router.Get("/input", h.InputPaig)
+	router.Post("/save", h.savePaig)
 
 	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
