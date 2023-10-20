@@ -7,6 +7,7 @@ import (
 	"github.com/zhashkevych/todo-app/pkg/service/Article"
 	"github.com/zhashkevych/todo-app/pkg/service/Author"
 	"github.com/zhashkevych/todo-app/pkg/service/Category"
+	"github.com/zhashkevych/todo-app/pkg/tools"
 	"gorm.io/gorm/logger"
 )
 
@@ -42,7 +43,7 @@ type Service struct {
 	ArticleService
 }
 
-func NewService(repos *repository.Repository, gen *string, Logger logger.Interface) *Service {
+func NewService(repos *repository.Repository, gen *tools.UUIDStringGenerator, Logger logger.Interface) *Service {
 	return &Service{
 		ArticleService:  Article.NewArticleService(repos, gen, Logger),
 		AuthorService:   Author.NewAuthorService(repos, gen, Logger),
