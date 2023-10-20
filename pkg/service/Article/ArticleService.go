@@ -22,6 +22,7 @@ func NewArticleService(rep *repository.Repository, gen *tools.UUIDStringGenerato
 }
 
 func (a ArticleService) Create(article *models.Article) (*models.Article, error) {
+	article.ID = a.gen.GenerateUUID()
 	return a.rep.ArticleRepository.Create(article)
 }
 
