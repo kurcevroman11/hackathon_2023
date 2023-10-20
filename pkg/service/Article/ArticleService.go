@@ -3,16 +3,17 @@ package Article
 import (
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
+	"github.com/zhashkevych/todo-app/pkg/tools"
 	"gorm.io/gorm/logger"
 )
 
 type ArticleService struct {
 	rep    *repository.Repository
-	gen    *string
+	gen    *tools.UUIDStringGenerator
 	Logger logger.Interface
 }
 
-func NewArticleService(rep *repository.Repository, gen *string, Logger logger.Interface) ArticleService {
+func NewArticleService(rep *repository.Repository, gen *tools.UUIDStringGenerator, Logger logger.Interface) ArticleService {
 	return ArticleService{
 		rep:    rep,
 		gen:    gen,
