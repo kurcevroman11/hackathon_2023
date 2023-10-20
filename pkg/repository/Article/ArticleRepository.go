@@ -12,7 +12,7 @@ type ArticleRepository struct {
 	Logger logger.Interface
 }
 
-func NewArticleRepository(db *gorm.DB, gen *string, Logger logger.Interface) ArticleRepository {
+func NewArticleRepository(db *gorm.DB, Logger logger.Interface) ArticleRepository {
 	return ArticleRepository{
 		db:     db,
 		Logger: Logger,
@@ -63,7 +63,7 @@ func (a ArticleRepository) GetById(id string) (*models.Article, error) {
 
 func (a ArticleRepository) GetAll() ([]*models.Article, error) {
 	var dest []*models.Article
-	result := a.db.Find(dest)
+	result := a.db.Find(&dest)
 	if result.Error != nil {
 		return nil, result.Error
 	}
