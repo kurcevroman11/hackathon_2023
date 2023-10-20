@@ -12,27 +12,27 @@ type CategoryRepository struct {
 	Logger logger.Interface
 }
 
-func (c CategoryRepository) Create() {
+func (c CategoryRepository) Create() (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryRepository) Update(id string, category models.Category) {
+func (c CategoryRepository) Update(id string, category models.Category) (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryRepository) GetById(id string) {
+func (c CategoryRepository) GetById(id string) (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryRepository) GetAll() {
+func (c CategoryRepository) GetAll() ([]*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryRepository) Delete(id string) {
+func (c CategoryRepository) Delete(id string) (bool, error) {
 	//TODO implement me
 	panic("implement me")
 }

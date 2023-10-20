@@ -5,26 +5,26 @@ import (
 	"gorm.io/gorm"
 )
 
+type ArticleRepository interface {
+	Create() (*models.Article, error)
+	Update(id string, article models.Article) (*models.Article, error)
+	GetById(id string) (*models.Article, error)
+	GetAll() ([]*models.Article, error)
+	Delete(id string) (bool, error)
+}
 type AuthorRepository interface {
-	Create(author models.Author)
-	Update(id string, author models.Author)
-	GetById(id string)
-	GetAll()
-	Delete(id string)
+	Create(author models.Author) (*models.Author, error)
+	Update(id string, author models.Author) (*models.Author, error)
+	GetById(id string) (*models.Author, error)
+	GetAll() ([]*models.Author, error)
+	Delete(id string) (bool, error)
 }
 type CategoryRepository interface {
-	Create()
-	Update(id string, category models.Category)
-	GetById(id string)
-	GetAll()
-	Delete(id string)
-}
-type ArticleRepository interface {
-	Create()
-	Update(id string, article models.Article)
-	GetById(id string)
-	GetAll()
-	Delete(id string)
+	Create() (*models.Category, error)
+	Update(id string, category models.Category) (*models.Category, error)
+	GetById(id string) (*models.Category, error)
+	GetAll() ([]*models.Category, error)
+	Delete(id string) (bool, error)
 }
 
 type Repository struct {

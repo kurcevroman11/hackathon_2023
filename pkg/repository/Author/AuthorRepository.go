@@ -12,27 +12,27 @@ type AuthorRepository struct {
 	Logger logger.Interface
 }
 
-func (a AuthorRepository) Create(author models.Author) {
+func (a AuthorRepository) Create(author models.Author) (*models.Author, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AuthorRepository) Update(id string, author models.Author) {
+func (a AuthorRepository) Update(id string, author models.Author) (*models.Author, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AuthorRepository) GetById(id string) {
+func (a AuthorRepository) GetById(id string) (*models.Author, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AuthorRepository) GetAll() {
+func (a AuthorRepository) GetAll() ([]*models.Author, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AuthorRepository) Delete(id string) {
+func (a AuthorRepository) Delete(id string) (bool, error) {
 	//TODO implement me
 	panic("implement me")
 }

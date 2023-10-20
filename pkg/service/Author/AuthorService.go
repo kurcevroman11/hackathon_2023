@@ -7,32 +7,40 @@ import (
 )
 
 type AuthorService struct {
-	rep    repository.Repository
-	gen    string
+	rep    *repository.Repository
+	gen    *string
 	Logger logger.Interface
 }
 
-func (a AuthorService) Create(author models.Author) {
+func NewAuthorService(rep *repository.Repository, gen *string, Logger logger.Interface) AuthorService {
+	return AuthorService{
+		rep:    rep,
+		gen:    gen,
+		Logger: Logger,
+	}
+}
+
+func (a AuthorService) Create(author models.Author) (*models.Author, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AuthorService) Update(id string, author models.Author) {
+func (a AuthorService) Update(id string, author models.Author) (*models.Author, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AuthorService) GetById(id string) {
+func (a AuthorService) GetById(id string) (*models.Author, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AuthorService) GetAll() {
+func (a AuthorService) GetAll() ([]*models.Author, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AuthorService) Delete(id string) {
+func (a AuthorService) Delete(id string) (bool, error) {
 	//TODO implement me
 	panic("implement me")
 }

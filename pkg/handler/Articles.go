@@ -3,26 +3,13 @@ package handler
 import (
 	"encoding/json"
 	"github.com/alecthomas/template"
-	"github.com/zhashkevych/todo-app/pkg/models"
 	"log"
 	"net/http"
-	"time"
 )
 
 func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Создание экземпляра структуры
-	data := models.Article{
-		ID:              "12",
-		Title:           "12",
-		Content:         "12",
-		PublicationDate: "23",
-		AuthorID:        "34",
-		Author:          models.Author{},
-		Categories:      nil,
-		CreateAt:        time.Time{},
-		UpdatedAt:       time.Time{},
-		DeletedAt:       nil,
-	}
+	data, err := h.services.ArticleService.GetAll()
 
 	// Преобразование структуры в JSON
 	jsonData, err := json.Marshal(data)

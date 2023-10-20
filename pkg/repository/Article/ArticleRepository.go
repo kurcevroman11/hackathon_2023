@@ -12,27 +12,27 @@ type ArticleRepository struct {
 	Logger logger.Interface
 }
 
-func (a ArticleRepository) Create() {
+func (a ArticleRepository) Create() (*models.Article, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a ArticleRepository) Update(id string, article models.Article) {
+func (a ArticleRepository) Update(id string, article models.Article) (*models.Article, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a ArticleRepository) GetById(id string) {
+func (a ArticleRepository) GetById(id string) (*models.Article, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a ArticleRepository) GetAll() {
+func (a ArticleRepository) GetAll() ([]*models.Article, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a ArticleRepository) Delete(id string) {
+func (a ArticleRepository) Delete(id string) (bool, error) {
 	//TODO implement me
 	panic("implement me")
 }

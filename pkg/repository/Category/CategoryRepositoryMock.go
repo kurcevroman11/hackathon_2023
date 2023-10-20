@@ -1,33 +1,31 @@
 package Category
 
-import (
-	"github.com/zhashkevych/todo-app/pkg/models"
-)
+import "github.com/zhashkevych/todo-app/pkg/models"
 
 type CategoryRepositoryMock struct {
 }
 
-func (c CategoryRepositoryMock) Create() {
+func (c CategoryRepositoryMock) Create() (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryRepositoryMock) Update(id string, category models.Category) {
+func (c CategoryRepositoryMock) Update(id string, category models.Category) (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryRepositoryMock) GetById(id string) {
+func (c CategoryRepositoryMock) GetById(id string) (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryRepositoryMock) GetAll() {
+func (c CategoryRepositoryMock) GetAll() ([]*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryRepositoryMock) Delete(id string) {
+func (c CategoryRepositoryMock) Delete(id string) (bool, error) {
 	//TODO implement me
 	panic("implement me")
 }

@@ -7,32 +7,40 @@ import (
 )
 
 type CategoryService struct {
-	rep    repository.Repository
-	gen    string
+	rep    *repository.Repository
+	gen    *string
 	Logger logger.Interface
 }
 
-func (c CategoryService) Create() {
+func NewCategoryService(rep *repository.Repository, gen *string, Logger logger.Interface) CategoryService {
+	return CategoryService{
+		rep:    rep,
+		gen:    gen,
+		Logger: Logger,
+	}
+}
+
+func (c CategoryService) Create() (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryService) Update(id string, category models.Category) {
+func (c CategoryService) Update(id string, category models.Category) (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryService) GetById(id string) {
+func (c CategoryService) GetById(id string) (*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryService) GetAll() {
+func (c CategoryService) GetAll() ([]*models.Category, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c CategoryService) Delete(id string) {
+func (c CategoryService) Delete(id string) (bool, error) {
 	//TODO implement me
 	panic("implement me")
 }

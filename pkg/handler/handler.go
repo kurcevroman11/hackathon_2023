@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/chi"
 	_ "github.com/zhashkevych/todo-app/docs"
 	"github.com/zhashkevych/todo-app/pkg/service"
+	"net/http"
 )
 
 type Handler struct {
@@ -18,6 +19,8 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	router := chi.NewRouter()
 
 	router.Get("/", h.MainPaig)
+
+	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Создание группы маршрутов для категорий
 	router.Route("/categories", func(r chi.Router) {
