@@ -12,7 +12,7 @@ import (
 //go:generate mockgen -source=service.go -destination=mocks/mock.go
 
 type ArticleService interface {
-	Create() (*models.Article, error)
+	Create(article *models.Article) (*models.Article, error)
 	Update(id string, article models.Article) (*models.Article, error)
 	GetById(id string) (*models.Article, error)
 	GetAll() ([]*models.Article, error)

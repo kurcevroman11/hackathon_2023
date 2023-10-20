@@ -20,27 +20,22 @@ func NewArticleService(rep *repository.Repository, gen *string, Logger logger.In
 	}
 }
 
-func (a ArticleService) Create() (*models.Article, error) {
-	//TODO implement me
-	panic("implement me")
+func (a ArticleService) Create(article *models.Article) (*models.Article, error) {
+	return a.rep.ArticleRepository.Create(article)
 }
 
 func (a ArticleService) Update(id string, article models.Article) (*models.Article, error) {
-	//TODO implement me
-	panic("implement me")
+	return a.rep.ArticleRepository.Update(id, article)
 }
 
 func (a ArticleService) GetById(id string) (*models.Article, error) {
-	//TODO implement me
-	panic("implement me")
+	return a.rep.ArticleRepository.GetById(id)
 }
 
 func (a ArticleService) GetAll() ([]*models.Article, error) {
-	//TODO implement me
-	panic("implement me")
+	return a.rep.ArticleRepository.GetAll()
 }
 
 func (a ArticleService) Delete(id string) (bool, error) {
-	//TODO implement me
-	panic("implement me")
+	return a.rep.ArticleRepository.Delete(id)
 }

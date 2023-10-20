@@ -10,7 +10,7 @@ import (
 )
 
 type ArticleRepository interface {
-	Create() (*models.Article, error)
+	Create(*models.Article) (*models.Article, error)
 	Update(id string, article models.Article) (*models.Article, error)
 	GetById(id string) (*models.Article, error)
 	GetAll() ([]*models.Article, error)
