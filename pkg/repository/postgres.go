@@ -2,15 +2,13 @@ package repository
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
-)
-
-const (
-	usersTable      = "users"
-	todoListsTable  = "todo_lists"
-	usersListsTable = "users_lists"
-	todoItemsTable  = "todo_items"
-	listsItemsTable = "lists_items"
+	"github.com/zhashkevych/todo-app/pkg/models"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"log"
+	"os"
+	"time"
 )
 
 type Config struct {
@@ -22,17 +20,39 @@ type Config struct {
 	SSLMode  string
 }
 
-func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
-	db, err := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-		cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SSLMode))
-	if err != nil {
-		return nil, err
+func NewPostgresDB(cfg Config, loggering bool) (*gorm.DB, error) {
+	var newLogger logger.Interface
+	if loggering {
+		newLogger = logger.New(
+			log.New(os.Stdout, "\r\n", log.LstdFlags), // Установите свой log.Logger
+			logger.Config{
+				SlowThreshold: time.Second, // Порог для медленных запросов
+				LogLevel:      logger.Info, // Уровень логирования
+				Colorful:      true,        // Включить цветной вывод
+			},
+		)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		return nil, err
+	dsn := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+		cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SSLMode)
+	for {
+		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: newLogger})
+
+		dbSQL, err := db.DB()
+		if err != nil {
+			log.Printf("Ошибка соединение с БД: %s", err.Error())
+			return nil, err
+		}
+
+		err = dbSQL.Ping()
+		if err == nil {
+			log.Println("Соединение с базой данных установлено!")
+			db.AutoMigrate(models.Article{}, models.Author{}, models.Category{})
+			return db, nil
+		}
+
+		log.Println("Соединение с базой данных не установлено. Повторная проверка через 5 секунд...")
+		time.Sleep(3 * time.Second)
 	}
 
-	return db, nil
 }

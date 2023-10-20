@@ -40,13 +40,14 @@ func main() {
 		DBName:   viper.GetString("db.dbname"),
 		SSLMode:  viper.GetString("db.sslmode"),
 		Password: viper.GetString("db.password"),
-	})
+	}, true)
 	if err != nil {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
 	}
 
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
+
 	handlers := handler.NewHandler(services)
 
 	srv := new(todo.Server)
@@ -66,10 +67,6 @@ func main() {
 
 	if err := srv.Shutdown(context.Background()); err != nil {
 		logrus.Errorf("error occured on server shutting down: %s", err.Error())
-	}
-
-	if err := db.Close(); err != nil {
-		logrus.Errorf("error occured on db connection close: %s", err.Error())
 	}
 }
 
