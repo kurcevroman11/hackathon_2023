@@ -2,7 +2,9 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/alecthomas/template"
 	"github.com/zhashkevych/todo-app/pkg/models"
+	"log"
 	"net/http"
 	"time"
 )
@@ -47,4 +49,14 @@ func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 }
 func (h *Handler) DeleteArticle(w http.ResponseWriter, r *http.Request) {
 
+}
+
+func (h *Handler) MainPaig(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("templates/Main.html", "templates/head.html", "templates/header.html", "templates/footer.html")
+
+	if err != nil {
+		log.Print("err :", err.Error())
+		return
+	}
+	tmpl.ExecuteTemplate(w, "index", nil)
 }

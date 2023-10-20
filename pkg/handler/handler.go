@@ -16,6 +16,7 @@ func NewHandler(services *service.Service) *Handler {
 
 func (h *Handler) InitRoutes() *chi.Mux {
 	router := chi.NewRouter()
+
 	// Создание группы маршрутов для категорий
 	router.Route("/categories", func(r chi.Router) {
 		r.Get("/", h.GetCategories)
@@ -27,7 +28,7 @@ func (h *Handler) InitRoutes() *chi.Mux {
 
 	// Создание группы маршрутов для статей
 	router.Route("/articles", func(r chi.Router) {
-		r.Get("/", h.GetArticles)
+		r.Get("/", h.MainPaig)
 		r.Get("/{articleID}", h.GetArticleByID)
 		r.Post("/", h.CreateArticle)
 		r.Put("/{articleID}", h.UpdateArticle)
