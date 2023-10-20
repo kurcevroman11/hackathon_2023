@@ -74,4 +74,5 @@ func (h *Handler) savePaig(w http.ResponseWriter, r *http.Request) {
 		Title: title, Content: content, AuthorID: "test"}
 
 	h.services.ArticleService.Create(&dest)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
