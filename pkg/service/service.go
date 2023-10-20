@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/boombuler/barcode"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
 	"github.com/zhashkevych/todo-app/pkg/service/Article"
@@ -16,17 +17,16 @@ type ArticleService interface {
 	Update(id string, article models.Article) (*models.Article, error)
 	GetById(id string) (*models.Article, error)
 	GetAll() ([]*models.Article, error)
-	GenerateQRCode(text string, filename string) error
+	GenerateQRCode(id string) (barcode.Barcode, error)
 	Delete(id string) (bool, error)
+	FakeData() (*models.Article, error)
 }
 type AuthorService interface {
-
 	Create(author models.Author) (*models.Author, error)
 	Update(id string, author models.Author) (*models.Author, error)
 	GetById(id string) (*models.Author, error)
 	GetAll() ([]*models.Author, error)
 	Delete(id string) (bool, error)
-
 }
 type CategoryService interface {
 	Create() (*models.Category, error)

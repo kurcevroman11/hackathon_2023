@@ -6,6 +6,7 @@ import (
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
 	"gorm.io/gorm/logger"
+	"time"
 )
 
 type ArticleService struct {
@@ -40,6 +41,31 @@ func (a ArticleService) GetAll() ([]*models.Article, error) {
 
 func (a ArticleService) Delete(id string) (bool, error) {
 	return a.rep.ArticleRepository.Delete(id)
+}
+func (a ArticleService) FakeData() (*models.Article, error) {
+
+	dest := models.Article{
+		ID:              "test",
+		Title:           "Test_Title",
+		Content:         "Test_Title",
+		PublicationDate: "Test_Data",
+		AuthorID:        "",
+		Author: models.Author{
+			ID:        "test",
+			FirstName: "Tests",
+			LastName:  "Tests",
+			Email:     "Tests@mail.com",
+			CreateAt:  time.Time{},
+			UpdatedAt: time.Time{},
+			DeletedAt: nil,
+		},
+		Categories: nil,
+		CreateAt:   time.Time{},
+		UpdatedAt:  time.Time{},
+		DeletedAt:  nil,
+	}
+
+	return a.rep.ArticleRepository.Create(&dest)
 }
 
 func (a ArticleService) GenerateQRCode(id string) (barcode.Barcode, error) {

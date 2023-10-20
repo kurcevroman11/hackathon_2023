@@ -63,7 +63,7 @@ func (a ArticleRepository) GetById(id string) (*models.Article, error) {
 
 func (a ArticleRepository) GetAll() ([]*models.Article, error) {
 	var dest []*models.Article
-	result := a.db.Find(dest)
+	result := a.db.Find(&dest)
 	if result.Error != nil {
 		return nil, result.Error
 	}
