@@ -3,18 +3,16 @@
 {{template "head" }}
 
 <body>
-
     {{template "header" }}
-
-
-
 
     <input type="text"  id="title" placeholder="Ввидите название статьи" class="form-control"><br>
     <div id="editor" name="editor" ></div>
     <button class="btn btn-warning" id="saveButton">Добавить</button>
+
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
-        // Инициализация Quill редактора
+
+
         var quill = new Quill('#editor', {
             theme: 'snow', // Тема редактора (по умолчанию "snow")
 
@@ -23,19 +21,24 @@
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    ['link', 'image', 'video'],
+                    ['link'],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                     [{ 'align': [] }],
-                    ['clean']
+                    ['clean'],
+                    [{'font': []}],
+
                 ]
             },
 
             // Настройки форматирования текста
             formats: [
                 'header', 'bold', 'italic', 'underline', 'strike',
-                'link', 'image', 'video', 'list', 'align'
+                'link', 'list', 'align', "font",
             ]
+
+
         });
+
 
         // Обработка события изменения контента
         quill.on('text-change', function(delta, oldDelta, source) {
@@ -98,5 +101,5 @@
     </script>
 
     {{template "footer" }}
-</div>>
+
 {{end}}
