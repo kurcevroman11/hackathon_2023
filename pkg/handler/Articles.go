@@ -2,9 +2,8 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/alecthomas/template"
-	"github.com/go-chi/chi"
+	chi "github.com/go-chi/chi"
 	"github.com/gorilla/mux"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"io/ioutil"
@@ -135,12 +134,7 @@ func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Статья успешно обновлена!"))
 }
 func (h *Handler) DeleteArticle(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	articleID := vars["articleID"]
 
-	// код для удаления статьи с идентификатором articleID из базы данных или другого хранилища данных
-
-	fmt.Fprintf(w, "Статья с идентификатором %s успешно удалена", articleID)
 }
 
 func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
@@ -191,7 +185,28 @@ func (h *Handler) inputPage(w http.ResponseWriter, r *http.Request) {
 		log.Print("err :", err.Error())
 		return
 	}
-	tmpl.ExecuteTemplate(w, "index", nil)
+
+	thems := []models.Theme{{
+		Id:   1,
+		Name: "Темная тема",
+		R:    0,
+		G:    0,
+		B:    0,
+	}, {
+		Id:   1,
+		Name: "Красная",
+		R:    255,
+		G:    0,
+		B:    0,
+	},
+	}
+
+	if err != nil {
+		log.Print("err :", err.Error())
+		return
+	}
+
+	tmpl.ExecuteTemplate(w, "index", thems)
 }
 func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
