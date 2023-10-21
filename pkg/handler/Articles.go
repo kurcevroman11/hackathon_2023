@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"github.com/alecthomas/template"
-	"github.com/go-chi/chi"
+	chi "github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"io/ioutil"
 	"log"
@@ -145,8 +145,30 @@ func (h *Handler) inputPage(w http.ResponseWriter, r *http.Request) {
 		log.Print("err :", err.Error())
 		return
 	}
-	tmpl.ExecuteTemplate(w, "index", nil)
+
+	thems := []models.Theme{{
+		Id:   1,
+		Name: "Темная тема",
+		R:    0,
+		G:    0,
+		B:    0,
+	}, {
+		Id:   1,
+		Name: "Красная",
+		R:    255,
+		G:    0,
+		B:    0,
+	},
+	}
+
+	if err != nil {
+		log.Print("err :", err.Error())
+		return
+	}
+
+	tmpl.ExecuteTemplate(w, "index", thems)
 }
+
 func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	content := r.FormValue("editor")
