@@ -18,9 +18,9 @@ func NewHandler(services *service.Service) *Handler {
 func (h *Handler) InitRoutes() *chi.Mux {
 	router := chi.NewRouter()
 
-	router.Get("/", h.MainPaig)
-	router.Get("/input", h.InputPaig)
-	router.Post("/save", h.savePaig)
+	router.Get("/", h.MainPage)
+	router.Get("/input", h.inputPage)
+	router.Post("/save", h.savePage)
 
 	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
@@ -36,7 +36,7 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	// Создание группы маршрутов для статей
 	router.Route("/articles", func(r chi.Router) {
 		r.Get("/", h.GetArticles)
-		r.Get("/{articleID}", h.GetArticleByID)
+		r.Get("/{ID}/{articleTitle}", h.GetArticleByID)
 		r.Post("/", h.CreateArticle)
 		r.Put("/{articleID}", h.UpdateArticle)
 		r.Delete("/{articleID}", h.DeleteArticle)

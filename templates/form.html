@@ -2,23 +2,20 @@
 
 {{template "head" }}
 
-<body class="d-flex h-100 text-center test">
-<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<body>
+
     {{template "header" }}
 
 
+    <main role="main" class="inner cover container mt-5">
+        <h1 class="cover-heading">Форма добавления статей</h1>
+        <form action="/save" method="post">
+            <input type="text" name="title" id="title" placeholder="Ввидите название статьи" class="form-control"><br>
+            <textarea name="content" id="content"  class="form-control" placeholder="Ввидите описание статьи"></textarea><br>
+            <button class="btn btn-primary">Добавить</button>
+        </form>
+    </main>
 
-<main role="main" class="inner cover">
-    <h1 class="cover-heading">Форма добавления статей</h1>
-    <form action="/save" method="post">
-        <input type="text" name="title" id="title" placeholder="Ввидите название статьи" class="form-control"><br>
-        <textarea name="anons" id="anons"  class="form-control" placeholder="Ввидите анонс статьи"></textarea><br>
-         <textarea name="content" id="content"  class="form-control" placeholder="Ввидите описание статьи"></textarea><br>
-
-        <button class="btn btn-warning">Добавить</button>
-    </form>
-</main>
 
     {{template "footer" }}
-</div>>
 {{end}}
