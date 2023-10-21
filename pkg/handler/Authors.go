@@ -33,6 +33,23 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+func (h *Handler) GetAllAuthor(w http.ResponseWriter, r *http.Request) {
+
+	out, err := h.services.AuthorService.GetAll()
+	if err != nil {
+		// Обработайте ошибку создания автора
+		http.Error(w, "Failed to get all author", http.StatusInternalServerError)
+		return
+	}
+
+	// Отправьте результат клиенту
+	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(out); err != nil {
+		// Обработайте ошибку сериализации JSON
+		http.Error(w, "Failed to send response", http.StatusInternalServerError)
+		return
+	}
+}
 
 func (h *Handler) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 	// Получение значения ID из URL

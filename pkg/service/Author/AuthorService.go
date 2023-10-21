@@ -44,8 +44,7 @@ func (a AuthorService) GetById(id string) (*models.Author, error) {
 }
 
 func (a AuthorService) GetAll() ([]*models.Author, error) {
-	//TODO implement me
-	panic("implement me")
+	return a.rep.AuthorRepository.GetAll()
 }
 
 func (a AuthorService) Delete(id string) (bool, error) {

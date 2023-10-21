@@ -42,6 +42,7 @@ func (h *Handler) InitRoutes() *chi.Mux {
 
 	// Создание группы маршрутов для статей
 	router.Route("/authors", func(r chi.Router) {
+		r.Get("/", h.GetAllAuthor)
 		r.Get("/", h.GetArticles)
 		r.Get("/{authorID}", h.GetByIdAuthor)
 		r.Post("/", h.CreateAuthor)

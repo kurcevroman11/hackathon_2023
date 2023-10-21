@@ -59,8 +59,14 @@ func (a *AuthorRepository) GetById(id string) (*models.Author, error) {
 }
 
 func (a AuthorRepository) GetAll() ([]*models.Author, error) {
-	//TODO implement me
-	panic("implement me")
+	var allAuthors []*models.Author
+
+	err := a.db.Find(&allAuthors).Error
+	if err != nil {
+		a.Logger.Error(nil, "Ошибка при получении всех авторов: ")
+		return nil, err
+	}
+	return allAuthors, nil
 }
 
 func (a AuthorRepository) Delete(id string) (bool, error) {
