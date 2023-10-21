@@ -14,4 +14,10 @@ ________
 go run cmd/main.go
 ```
 
+### Swagger API Documentation
+
+To view the Swagger documentation, [click here](/swagger-ui/).
+
+
+
 
