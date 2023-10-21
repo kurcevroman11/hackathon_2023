@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/zhashkevych/todo-app/pkg/tools"
 	"os"
 	"os/signal"
@@ -70,6 +73,16 @@ func main() {
 	if err := srv.Shutdown(context.Background()); err != nil {
 		logrus.Errorf("error occured on server shutting down: %s", err.Error())
 	}
+	r := gin.Default()
+
+	// Импортируйте маршруты, которые вы хотите задокументировать с помощью Swagger
+	// ...
+
+	// Передайте пути к gin-swagger
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	// Запустите сервер
+	r.Run(":8080")
 }
 
 func initConfig() error {
