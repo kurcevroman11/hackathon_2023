@@ -59,7 +59,8 @@ func (a ArticleRepository) GetById(id string) (*models.Article, error) {
 
 func (a ArticleRepository) GetAll() ([]*models.Article, error) {
 	var dest []*models.Article
-	result := a.db.Find(&dest)
+	result := a.db.Preload("ImgFile").Find(&dest) // "Comments" - имя поля, содержащего foreign key
+
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -67,6 +68,7 @@ func (a ArticleRepository) GetAll() ([]*models.Article, error) {
 		return nil, Error.RecordNotCreate
 	}
 	return dest, nil
+
 }
 
 func (a ArticleRepository) Delete(id string) (bool, error) {

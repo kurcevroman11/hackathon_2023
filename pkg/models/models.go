@@ -22,6 +22,15 @@ type Author struct {
 	DeletedAt *time.Time `json:"-"`
 }
 
+type File struct {
+	Id        string
+	Name      string
+	Path      string
+	CreateAt  time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"-"`
+}
+
 // Article модель статьи
 type Article struct {
 	ID              string    `gorm:"primary_key" json:"id"`
@@ -30,10 +39,10 @@ type Article struct {
 	Content         string    `json:"content"`
 	PublicationDate string    `json:"publication_date"`
 	AuthorID        string    `json:"-"`
-	Author          Author    `json:"author" gorm:"foreignKey:AuthorID;preload:true"`
 	CreateAt        time.Time `json:"created_at"`
+	FileId          string    `json:"-"`
+	ImgFile         File      `json:"imgFile" gorm:"foreignKey:FileId;preload:true"`
 	UpdatedAt       time.Time `json:"updated_at"`
-	Image           []byte
 	QRCode          string
 	DeletedAt       *time.Time `json:"-"`
 }

@@ -28,6 +28,7 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	))
 
 	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	router.Handle("/img/*", http.StripPrefix("/img/", http.FileServer(http.Dir("img"))))
 
 	// Создание группы маршрутов для статей
 	router.Route("/articles", func(r chi.Router) {

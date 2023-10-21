@@ -11,12 +11,12 @@
     <div class="card text-center mt-4">
       <div class="row">
         <div class="col-md-5">
-          <img src="{{ .Image }}" alt="" class="rounded-start card-img-bottom">
+          <img src="{{ $article.ImgFile.Path }}" alt="" class="rounded-start card-img-bottom">
         </div>
         <div class="col-md-7">
           <div class="card-body text-start">
             <h5 class="card-title ">{{ .Title }}</h5>
-            <p class="card-text fst-italic">{{ .CreateAt.UTC.Format "2006-01-02"  }}</p>
+            <p class="card-text fst-italic">{{ .PublicationDate  }}</p>
             <p class="card-text">{{ .Subtitle }}</p>
             <a href="articles/{{index $.Urls $index}}" class="btn btn-primary">Read article</a>
           </div>

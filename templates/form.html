@@ -65,12 +65,11 @@
         // Обработчик события для кнопки сохранения
         document.getElementById("saveButton").addEventListener("click", function () {
 
-            // Находим элементы по их id
-            var imageInput = document.querySelector("input[type='file']");
+            const fileInput = document.getElementById('imageInput');
             var titleInput = document.getElementById("title");
             var subtitleInput = document.getElementById("subtitle");
             var createAtInput = document.getElementById("createAt");
-            var editorInput = document.getElementById("editor");
+
             // Создаем объект FormData
             var formData = new FormData();
 
@@ -78,13 +77,13 @@
             var title = titleInput.value;
             var subtitle = subtitleInput.value;
             var createAt = createAtInput.value;
-            var content = editorInput.value; // Если это поле для ввода текста
-            var selectedFile = imageInput.value;
+            var editorContent = quill.root.innerHTML; // Если это поле для ввода текста
+            var selectedFile = fileInput.files[0];
             // Добавляем все данные в объект FormData
             formData.append("title", title);
             formData.append("subtitle", subtitle);
             formData.append("createAt", createAt);
-            formData.append("content", content);
+            formData.append("content", editorContent);
             formData.append("image", selectedFile);
 
             // Отправляем formData на сервер

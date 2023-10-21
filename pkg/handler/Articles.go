@@ -6,11 +6,9 @@ import (
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
-	"time"
 )
 
 // GetArticles @Summary Получить все статьи
@@ -60,34 +58,24 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "articles", data)
 }
 func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	article := models.Article{}
+
+	title := r.FormValue("title")
+	article.Title = title
+	subtitle := r.FormValue("subtitle")
+	article.Subtitle = subtitle
+	createAt := r.FormValue("createAt")
+	article.PublicationDate = createAt
+	content := r.FormValue("content")
+	article.Content = content
+	file, err := h.services.ArticleService.GetImage(r)
+	article.ImgFile = *file
 	if err != nil {
-		http.Error(w, "Ошибка чтения тела запроса", http.StatusBadRequest)
+		http.Error(w, "Ошибка при копировании файла", http.StatusInternalServerError)
 		return
 	}
-
-	var articleData models.ArticleData
-	if err := json.Unmarshal(body, &articleData); err != nil {
-		http.Error(w, "Ошибка декодирования JSON", http.StatusBadRequest)
-		return
-	}
-
-	// Создание объекта Article на основе данных ArticleData
-	article := models.Article{
-		Title:           articleData.Title,
-		Subtitle:        articleData.Subtitle,
-		Content:         articleData.Content,
-		PublicationDate: time.Now().String(),
-		AuthorID:        "test",
-		Author:          models.Author{},
-		CreateAt:        time.Now(),
-		UpdatedAt:       time.Now(),
-		Image:           articleData.Image,
-		QRCode:          "",
-		DeletedAt:       nil,
-	}
-
 	h.services.ArticleService.Create(&article)
+
 	// Отправить ответ клиенту
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Статья успешно создана и сохранена!"))
@@ -168,7 +156,7 @@ func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/svg+xml")
 
 	// Вывод в буфере
-	w.Write([]byte(dest.Image))
+	w.Write([]byte(dest.Title))
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
