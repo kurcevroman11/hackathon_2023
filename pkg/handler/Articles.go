@@ -78,7 +78,6 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 		PublicationDate: time.Now().String(),
 		AuthorID:        "test",
 		Author:          models.Author{},
-		Categories:      nil,
 		CreateAt:        time.Now(),
 		UpdatedAt:       time.Now(),
 		Image:           "",

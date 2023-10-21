@@ -63,10 +63,9 @@ func (a ArticleService) FakeData() (*models.Article, error) {
 			UpdatedAt: time.Time{},
 			DeletedAt: nil,
 		},
-		Categories: nil,
-		CreateAt:   time.Time{},
-		UpdatedAt:  time.Time{},
-		DeletedAt:  nil,
+		CreateAt:  time.Time{},
+		UpdatedAt: time.Time{},
+		DeletedAt: nil,
 	}
 
 	return a.rep.ArticleRepository.Create(&dest)
