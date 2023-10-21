@@ -1,0 +1,25 @@
+{{define "articles"}}
+
+{{template "head" }}
+
+<body>
+{{template "header_for_articlePage" }}
+<main class="container">
+<div class="card text-center mt-4">
+    <div class="row">
+        <div class="col-md-5">
+            <img src="https://fight.ru/wp-content/uploads/2022/07/999f412d50215fc11045a7cb420bc719-scaled.jpg" alt="" class="card-img-bottom">
+        </div>
+        <div class="col-md-7">
+            <div class="card-body text-start">
+                <h5 class="card-title ">{{ .Article.Title }}</h5>
+                <p class="card-text">{{ .Article.Content }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+{{template "footer" }}
+{{end}}
+

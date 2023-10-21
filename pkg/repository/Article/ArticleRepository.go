@@ -51,12 +51,9 @@ func (a ArticleRepository) Update(id string, updated models.Article) (*models.Ar
 
 func (a ArticleRepository) GetById(id string) (*models.Article, error) {
 	var dest *models.Article
-	result := a.db.Where("ID = ?", id).Find(dest)
+	result := a.db.Where("ID = ?", id).Find(&dest)
 	if result.Error != nil {
 		return nil, result.Error
-	}
-	if result.RowsAffected == 0 {
-		return nil, Error.RecordNotCreate
 	}
 	return dest, nil
 }

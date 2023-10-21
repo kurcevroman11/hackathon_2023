@@ -7,7 +7,7 @@
 
 
   <main class="container">
-    {{ range .Articles }}
+    {{ range $index, $article := .Articles }}
     <div class="card text-center mt-4">
       <div class="row">
         <div class="col-md-5">
@@ -16,39 +16,40 @@
         <div class="col-md-7">
           <div class="card-body text-start">
             <h5 class="card-title ">{{ .Title }}</h5>
-            <p class="card-text ">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
+            <p class="card-text fst-italic">{{ .CreateAt.UTC.Format "2006-01-02 15:04:05"  }}</p>
+            <p class="card-text">{{ .Content }}</p>
+            <a href="articles/{{index $.Urls $index}}" class="btn btn-primary">Read article</a>
           </div>
           <img src="{{ .QRCode }}" alt="QR Code">
         </div>
       </div>
     </div>
     {{ end }}
-<!--    <div class="animation-container">-->
-<!--      <svg class="intro" viewbox="0 0 200 86">-->
-<!--        <text text-anchor="start" x="10" y="30" class="text text-stroke" clip-path="url(#text1)">Welcome to</text>-->
-<!--        <text text-anchor="start" x="10" y="50" class="text text-stroke" clip-path="url(#text2)">Sebbeasts</text>-->
-<!--        <text text-anchor="start" x="10" y="70" class="text text-stroke" clip-path="url(#text3)">News</text>-->
-<!--        <text text-anchor="start" x="10" y="30" class="text text-stroke text-stroke-2" clip-path="url(#text1)">Welcome-->
-<!--          to-->
-<!--        </text>-->
-<!--        <text text-anchor="start" x="10" y="50" class="text text-stroke text-stroke-2" clip-path="url(#text2)">Sebbeasts-->
-<!--        </text>-->
-<!--        <text text-anchor="start" x="10" y="70" class="text text-stroke text-stroke-2" clip-path="url(#text3)">News-->
-<!--        </text>-->
-<!--        <defs>-->
-<!--          <clipPath id="text1">-->
-<!--            <text text-anchor="start" x="10" y="30" class="text">Welcome to</text>-->
-<!--          </clipPath>-->
-<!--          <clipPath id="text2">-->
-<!--            <text text-anchor="start" x="10" y="50" class="text">Sebbeasts</text>-->
-<!--          </clipPath>-->
-<!--          <clipPath id="text3">-->
-<!--            <text text-anchor="start" x="10" y="70" class="text">News</text>-->
-<!--          </clipPath>-->
-<!--        </defs>-->
-<!--      </svg>-->
-<!--    </div>-->
+    <div class="animation-container">
+      <svg class="intro" viewbox="0 0 200 86">
+        <text text-anchor="start" x="10" y="30" class="text text-stroke" clip-path="url(#text1)">Welcome to</text>
+        <text text-anchor="start" x="10" y="50" class="text text-stroke" clip-path="url(#text2)">Sebbeasts</text>
+        <text text-anchor="start" x="10" y="70" class="text text-stroke" clip-path="url(#text3)">News</text>
+        <text text-anchor="start" x="10" y="30" class="text text-stroke text-stroke-2" clip-path="url(#text1)">Welcome
+          to
+        </text>
+        <text text-anchor="start" x="10" y="50" class="text text-stroke text-stroke-2" clip-path="url(#text2)">Sebbeasts
+        </text>
+        <text text-anchor="start" x="10" y="70" class="text text-stroke text-stroke-2" clip-path="url(#text3)">News
+        </text>
+        <defs>
+          <clipPath id="text1">
+            <text text-anchor="start" x="10" y="30" class="text">Welcome to</text>
+          </clipPath>
+          <clipPath id="text2">
+            <text text-anchor="start" x="10" y="50" class="text">Sebbeasts</text>
+          </clipPath>
+          <clipPath id="text3">
+            <text text-anchor="start" x="10" y="70" class="text">News</text>
+          </clipPath>
+        </defs>
+      </svg>
+    </div>
   </main>
 
   {{template "footer" }}
