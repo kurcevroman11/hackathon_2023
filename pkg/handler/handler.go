@@ -29,15 +29,6 @@ func (h *Handler) InitRoutes() *chi.Mux {
 
 	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	// Создание группы маршрутов для категорий
-	router.Route("/categories", func(r chi.Router) {
-		r.Get("/", h.GetCategories)
-		r.Get("/{categoryID}", h.GetCategoryByID)
-		r.Post("/", h.CreateCategory)
-		r.Put("/{categoryID}", h.UpdateCategory)
-		r.Delete("/{categoryID}", h.DeleteCategory)
-	})
-
 	// Создание группы маршрутов для статей
 	router.Route("/articles", func(r chi.Router) {
 		r.Get("/", h.GetArticles)

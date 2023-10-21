@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Выбор темы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+        }
+        .container {
+            text-align: center;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Выбор темы</h1>
+    <label for="theme">Выберите тему:</label>
+    <select id="theme">
+        <option value="default">По умолчанию</option>
+        <option value="dark">Тёмная</option>
+    </select>
+</div>
+
+<script>
+    const themeSelect = document.getElementById('theme');
+
+    themeSelect.addEventListener('change', function() {
+        const selectedTheme = themeSelect.value;
+        applyTheme(selectedTheme);
+    });
+
+    function applyTheme(theme) {
+        const body = document.body;
+        const container = document.querySelector('.container');
+
+        if (theme === 'dark') {
+            body.style.backgroundColor = 'black';
+            body.style.color = 'white';
+            container.style.backgroundColor = 'darkgray';
+        } else {
+            body.style.backgroundColor = 'white';
+            body.style.color = 'black';
+            container.style.backgroundColor = 'lightgray';
+        }
+    }
+</script>
+</body>
+</html>

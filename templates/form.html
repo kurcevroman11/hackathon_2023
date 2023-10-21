@@ -8,14 +8,27 @@
 
     <div class="container mt-3">
         <input type="text" id="title" placeholder="Введите название статьи" class="form-control"><br>
-        <div id="editor" name="editor" placeholder="Введите текст статьи" class="h-50 p3"></div>
-        <button class="btn btn-primary mt-2" id="saveButton" href="/save" >Добавить</button>
+        <input type="text" id="Subtitle" placeholder="Введите подзаголовок статьи" class="form-control"><br>
+        <input type="text" id="CreateAt" class="form-control md-2" placeholder="Введите подзаголовок статьи" value="" readonly>
+        <script>
+            // Получить текущую дату
+            var currentDate = new Date();
+
+            // Форматировать дату в строку (например, "dd.mm.yyyy")
+            var formattedDate = currentDate.getDate() + '.' + (currentDate.getMonth() + 1) + '.' + currentDate.getFullYear();
+
+            // Установить отформатированную дату в поле ввода
+            document.getElementById("CreateAt").value = formattedDate;
+        </script>
+        <div id="editor" name="editor" placeholder="Введите текст статьи" class="h-50 p3 "></div>
+        <button class="btn btn-warning mt-2" id="saveButton">Добавить</button>
     </div>
 
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
-        // Инициализация Quill редактора
+
+
         var quill = new Quill('#editor', {
             theme: 'snow', // Тема редактора (по умолчанию "snow")
 
@@ -24,17 +37,19 @@
                 toolbar: [
                     [{ 'header': '1' }, { 'header': '2' }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    ['link', 'image',],
+                    ['link', 'image'],
                     [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                     [{ 'align': [] }],
-                    ['clean']
+                    ['clean'],
+                    [{'font': []}],
+
                 ]
             },
 
             // Настройки форматирования текста
             formats: [
                 'header', 'bold', 'italic', 'underline', 'strike',
-                'link', 'image', 'video', 'list', 'align'
+                'link','image', 'list', 'align', "font",
             ]
         });
 
@@ -95,8 +110,10 @@
                 .catch(function(error) {
                     console.error('Ошибка при отправке запроса:', error);
                 });
+            document.location.href = "/"
         }
     </script>
 
     {{template "footer" }}
+
 {{end}}
