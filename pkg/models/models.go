@@ -34,5 +34,7 @@ type Article struct {
 	Categories      []Category `gorm:"many2many:article_categories;" json:"categories"`
 	CreateAt        time.Time  `json:"created_at"`
 	UpdatedAt       time.Time  `json:"updated_at"`
+	Image           string
+	URL             string
 	DeletedAt       *time.Time `json:"-"`
 }

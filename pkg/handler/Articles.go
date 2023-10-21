@@ -80,5 +80,16 @@ func (h *Handler) savePaig(w http.ResponseWriter, r *http.Request) {
 		Title: title, Content: content, AuthorID: "test"}
 
 	h.services.ArticleService.Create(&dest)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+
+	err := h.services.ArticleService.GenerateQRCode(&dest)
+	if err != nil {
+		return
+	}
+
+	// Установка заголовка Content-Type
+	w.Header().Set("Content-Type", "image/svg+xml")
+
+	// Вывод в буфере
+	w.Write([]byte(dest.Image))
+
 }
