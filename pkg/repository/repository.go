@@ -6,6 +6,7 @@ import (
 	"github.com/zhashkevych/todo-app/pkg/repository/Author"
 	"github.com/zhashkevych/todo-app/pkg/repository/File"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 )
 
@@ -13,7 +14,7 @@ type ArticleRepository interface {
 	Create(*models.Article) (*models.Article, error)
 	Update(id string, article models.Article) (*models.Article, error)
 	GetById(id string) (*models.Article, error)
-	GetAll() ([]*models.Article, error)
+	GetAll(conditions []clause.Expression) ([]*models.Article, error)
 	Delete(id string) (bool, error)
 }
 type AuthorRepository interface {

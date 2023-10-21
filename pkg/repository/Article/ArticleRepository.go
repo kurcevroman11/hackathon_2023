@@ -4,6 +4,7 @@ import (
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository/Error"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 )
 
@@ -57,9 +58,9 @@ func (a ArticleRepository) GetById(id string) (*models.Article, error) {
 	return dest, nil
 }
 
-func (a ArticleRepository) GetAll() ([]*models.Article, error) {
+func (a ArticleRepository) GetAll(conditions []clause.Expression) ([]*models.Article, error) {
 	var dest []*models.Article
-	result := a.db.Preload("ImgFile").Find(&dest) // "Comments" - имя поля, содержащего foreign key
+	result := a.db.Preload("ImgFile").Clauses(conditions...).Find(&dest)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -68,9 +69,7 @@ func (a ArticleRepository) GetAll() ([]*models.Article, error) {
 		return nil, Error.RecordNotCreate
 	}
 	return dest, nil
-
 }
-
 func (a ArticleRepository) Delete(id string) (bool, error) {
 	// Удаляем статью из базы данных по идентификатору
 	result := a.db.Where("id = ?", id).Delete(&models.Article{})

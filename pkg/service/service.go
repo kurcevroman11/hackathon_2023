@@ -17,7 +17,7 @@ type ArticleService interface {
 	Create(article *models.Article) (*models.Article, error)
 	Update(id string, article models.Article) (*models.Article, error)
 	GetById(id string) (*models.Article, error)
-	GetAll() ([]*models.Article, error)
+	GetAll(filter *models.FilterArticle) ([]*models.Article, error)
 	GenerateQRCode(str string, dest *models.Article) error
 	Delete(id string) (bool, error)
 	GetImage(r *http.Request) (*models.File, error)

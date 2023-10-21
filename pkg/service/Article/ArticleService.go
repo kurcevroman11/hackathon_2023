@@ -9,6 +9,7 @@ import (
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
 	"github.com/zhashkevych/todo-app/pkg/tools"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 	"io"
 	"net/http"
@@ -47,8 +48,9 @@ func (a ArticleService) GetById(id string) (*models.Article, error) {
 	return a.rep.ArticleRepository.GetById(id)
 }
 
-func (a ArticleService) GetAll() ([]*models.Article, error) {
-	return a.rep.ArticleRepository.GetAll()
+func (a ArticleService) GetAll(filter *models.FilterArticle) ([]*models.Article, error) {
+	conditions := a.getWhereList(filter)
+	return a.rep.ArticleRepository.GetAll(conditions)
 }
 
 func (a ArticleService) Delete(id string) (bool, error) {
@@ -124,4 +126,22 @@ func (a ArticleService) GetImage(r *http.Request) (*models.File, error) {
 	a.Logger.Info(context.Background(), "Изображение успешно загружено и сохранено как :", newFileName)
 	return localfile, nil
 
+}
+
+func (a ArticleService) getWhereList(filter *models.FilterArticle) []clause.Expression {
+	var conditions []clause.Expression
+
+	// Функция для добавления условия в список
+	addCondition := func(dataInterface []interface{}, nameField string) {
+		conditions = append(conditions, clause.IN{
+			Column: clause.Column{Name: nameField},
+			Values: dataInterface,
+		})
+	}
+
+	if filter != nil {
+		addCondition([]interface{}{filter.Public}, "public")
+
+	}
+	return conditions
 }

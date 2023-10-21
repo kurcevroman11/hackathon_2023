@@ -17,6 +17,7 @@ type Author struct {
 	FirstName string     `json:"first_name"`
 	LastName  string     `json:"last_name"`
 	Email     string     `json:"email"`
+	Public    bool       `json:"public"`
 	CreateAt  time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"-"`
@@ -39,10 +40,15 @@ type Article struct {
 	Content         string    `json:"content"`
 	PublicationDate string    `json:"publication_date"`
 	AuthorID        string    `json:"-"`
+	Public          bool      `json:"public"`
 	CreateAt        time.Time `json:"created_at"`
 	FileId          string    `json:"-"`
 	ImgFile         File      `json:"imgFile" gorm:"foreignKey:FileId;preload:true"`
 	UpdatedAt       time.Time `json:"updated_at"`
 	QRCode          string
 	DeletedAt       *time.Time `json:"-"`
+}
+
+type FilterArticle struct {
+	Public bool
 }

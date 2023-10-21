@@ -14,6 +14,12 @@
         <input type="text" id="title" placeholder="Введите название статьи" class="form-control" required><br>
         <input type="text" id="subtitle" placeholder="Введите подзаголовок статьи" class="form-control" required><br>
         <input type="text" id="createAt" class="form-control md-2" placeholder="Введите подзаголовок статьи" value="" readonly>
+        <div class="form-check md-3 ">
+            <input class="form-check-input "  type="checkbox" value="" id="flexCheckDefault" title="Сделать публичным?">
+            <label class="formmd-2-check-label" for="flexCheckDefault">
+                Сделать публичным
+            </label>
+        </div>
         <script>
             // Получить текущую дату
             var currentDate = new Date();
@@ -69,16 +75,23 @@
             var titleInput = document.getElementById("title");
             var subtitleInput = document.getElementById("subtitle");
             var createAtInput = document.getElementById("createAt");
+            const radioButton = document.getElementById('flexCheckDefault');
 
             // Создаем объект FormData
             var formData = new FormData();
 
+            if (radioButton.checked) {
+                formData.append("public", true)
+            }else {
+                formData.append("public", false)
+            }
             // Получаем значения из других полей (title, subtitle, createAt, content)
             var title = titleInput.value;
             var subtitle = subtitleInput.value;
             var createAt = createAtInput.value;
             var editorContent = quill.root.innerHTML; // Если это поле для ввода текста
             var selectedFile = fileInput.files[0];
+
             // Добавляем все данные в объект FormData
             formData.append("title", title);
             formData.append("subtitle", subtitle);

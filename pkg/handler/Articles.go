@@ -19,7 +19,7 @@ import (
 // @Router /articles [get]
 func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Создание экземпляра структуры
-	data, err := h.services.ArticleService.GetAll()
+	data, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: false})
 
 	// Преобразование структуры в JSON
 	jsonData, err := json.Marshal(data)
@@ -68,6 +68,13 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	article.PublicationDate = createAt
 	content := r.FormValue("content")
 	article.Content = content
+	public := r.FormValue("public")
+	if public == "true" {
+		article.Public = true
+	} else {
+		article.Public = false
+	}
+
 	file, err := h.services.ArticleService.GetImage(r)
 	article.ImgFile = *file
 	if err != nil {
@@ -95,7 +102,7 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	articles, err := h.services.ArticleService.GetAll()
+	articles, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: true})
 
 	for _, article := range articles {
 		if len(article.Content) > 900 {
