@@ -19,6 +19,18 @@ func NewArticleRepository(db *gorm.DB, Logger logger.Interface) ArticleRepositor
 	}
 }
 
+func (a ArticleRepository) Create(article *models.Article) (*models.Article, error) {
+	tx := a.db.Create(article)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return nil, Error.RecordNotCreate
+	}
+
+	return article, nil
+}
+
 func (a ArticleRepository) Update(id string, updated models.Article) (*models.Article, error) {
 	// Найти статью по идентификатору
 	var existingArticle models.Article

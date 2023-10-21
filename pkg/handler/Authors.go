@@ -1,12 +1,10 @@
 package handler
 
-package handler
-
 import (
-"encoding/json"
-"github.com/go-chi/chi"
-"github.com/zhashkevych/todo-app/pkg/models"
-"net/http"
+	"encoding/json"
+	"github.com/go-chi/chi"
+	"github.com/zhashkevych/todo-app/pkg/models"
+	"net/http"
 )
 
 // CreateAuthor is a handler function that create new authors.

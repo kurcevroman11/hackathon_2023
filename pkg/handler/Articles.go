@@ -3,8 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"github.com/alecthomas/template"
-	chi "github.com/go-chi/chi"
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"io/ioutil"
 	"log"
@@ -131,8 +130,7 @@ func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Получение ID статьи из URL-параметров
-	vars := mux.Vars(r)
-	articleID := vars["id"]
+	articleID := chi.URLParam(r, "authors")
 
 	// Получение статьи из базы данных по ее ID
 	article, err := h.services.ArticleService.GetById(articleID)
