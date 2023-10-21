@@ -1,0 +1,92 @@
+basePath: /
+definitions:
+  models.Article:
+    properties:
+      author:
+        $ref: '#/definitions/models.Author'
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      image:
+        type: string
+      publication_date:
+        type: string
+      qrcode:
+        type: string
+      subtitle:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Author:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: API Server for TodoList Application
+  title: Todo App API
+  version: "1.0"
+paths:
+  /api/v1/authors:
+    post:
+      consumes:
+      - application/json
+      description: Эндпоинт для создания нового автора.
+      parameters:
+      - description: Данные автора
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Author'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Успешное создание автора
+          schema:
+            $ref: '#/definitions/models.Author'
+        "400":
+          description: Ошибка при парсинге JSON
+          schema:
+            type: string
+        "500":
+          description: Ошибка при создании автора
+          schema:
+            type: string
+      summary: Создание автора
+      tags:
+      - Авторы
+  /articles:
+    get:
+      description: Получение списка всех статей
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Article'
+            type: array
+      tags:
+      - Articles
+swagger: "2.0"

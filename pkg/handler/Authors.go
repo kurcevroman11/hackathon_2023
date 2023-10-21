@@ -7,6 +7,18 @@ import (
 	"net/http"
 )
 
+// CreateAuthor is a handler function that create new authors.
+//
+// @Summary Создание автора
+// @Description Эндпоинт для создания нового автора.
+// @Tags Авторы
+// @Accept json
+// @Produce json
+// @Param input body models.Author true "Данные автора"
+// @Success 201 {object} models.Author "Успешное создание автора"
+// @Failure 400 {string} string "Ошибка при парсинге JSON"
+// @Failure 500 {string} string "Ошибка при создании автора"
+// @Router /api/v1/authors [post]
 func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	var input models.Author
 
@@ -33,13 +45,6 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-// GetAllAuthor @Summary Получить всех авторов
-// @Description Получение списка всех авторов
-// @Tags Articles
-// @Produce json
-// @Success 200 {array} models.Author
-// @Router /authors [get]
 func (h *Handler) GetAllAuthor(w http.ResponseWriter, r *http.Request) {
 
 	out, err := h.services.AuthorService.GetAll()

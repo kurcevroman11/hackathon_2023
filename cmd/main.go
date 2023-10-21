@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/zhashkevych/todo-app/pkg/tools"
 	"os"
 	"os/signal"
@@ -22,10 +25,6 @@ import (
 
 // @host localhost:8000
 // @BasePath /
-
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
@@ -70,6 +69,12 @@ func main() {
 	if err := srv.Shutdown(context.Background()); err != nil {
 		logrus.Errorf("error occured on server shutting down: %s", err.Error())
 	}
+	r := gin.Default()
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	// Запустите сервер
+	r.Run(":8080")
 }
 
 func initConfig() error {
