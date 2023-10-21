@@ -45,6 +45,17 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// GetAllAuthor is a handler function that retrieves all authors.
+//
+// @Summary Получение всех авторов
+// @Description Эндпоинт для получения списка всех авторов.
+// @Tags Авторы
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Author
+// @Failure 500 {string} string "Failed to get all author | Failed to send response"
+// @Router /authors/ [get]
 func (h *Handler) GetAllAuthor(w http.ResponseWriter, r *http.Request) {
 
 	out, err := h.services.AuthorService.GetAll()

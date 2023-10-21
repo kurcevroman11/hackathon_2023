@@ -18,6 +18,10 @@ definitions:
         type: string
       subtitle:
         type: string
+      theme:
+        $ref: '#/definitions/models.Theme'
+      themeId:
+        type: integer
       title:
         type: string
       updated_at:
@@ -44,6 +48,19 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  models.Theme:
+    properties:
+      b:
+        type: integer
+      g:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      r:
+        type: integer
     type: object
 host: localhost:8000
 info:
@@ -123,6 +140,45 @@ paths:
       tags:
       - Статьи
   /articles/{ID}:
+    put:
+      consumes:
+      - application/json
+      description: Эндпоинт для обновления существующей статьи.
+      parameters:
+      - description: ID статьи
+        in: path
+        name: ID
+        required: true
+        type: string
+      - description: Данные статьи
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.ArticleData'
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Статья успешно обновлена!
+          schema:
+            type: string
+        "400":
+          description: Ошибка чтения тела запроса | Ошибка декодирования JSON
+          schema:
+            type: string
+        "404":
+          description: Статья не найдена
+          schema:
+            type: string
+        "500":
+          description: Ошибка при обновлении статьи
+          schema:
+            type: string
+      summary: Обновление статьи
+      tags:
+      - Статьи
+  /articles/{ID}/{articleTitle}:
     get:
       consumes:
       - application/json
@@ -147,4 +203,25 @@ paths:
       summary: Получение статьи по ID
       tags:
       - Статьи
+  /authors/:
+    get:
+      consumes:
+      - application/json
+      description: Эндпоинт для получения списка всех авторов.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Author'
+            type: array
+        "500":
+          description: Failed to get all author | Failed to send response
+          schema:
+            type: string
+      summary: Получение всех авторов
+      tags:
+      - Авторы
 swagger: "2.0"

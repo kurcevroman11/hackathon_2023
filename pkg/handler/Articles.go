@@ -47,7 +47,7 @@ func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 // @Param ID path string true "ID статьи"
 // @Success 200 {object} models.Article
 // @Failure 404 {string} string "Статья не найдена"
-// @Router /articles/{ID} [get]
+// @Router /articles/{ID}/{articleTitle} [get]
 func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/article.html", "templates/head.html", "templates/header_for_articlePage.html", "templates/footer.html")
 	if err != nil {
@@ -114,6 +114,21 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Статья успешно создана и сохранена!"))
 }
+
+// UpdateArticle is a handler function that updates an existing article.
+//
+// @Summary Обновление статьи
+// @Description Эндпоинт для обновления существующей статьи.
+// @Tags Статьи
+// @Accept json
+// @Produce plain
+// @Param ID path string true "ID статьи"
+// @Param body body models.ArticleData true "Данные статьи"
+// @Success 200 {string} string "Статья успешно обновлена!"
+// @Failure 400 {string} string "Ошибка чтения тела запроса | Ошибка декодирования JSON"
+// @Failure 404 {string} string "Статья не найдена"
+// @Failure 500 {string} string "Ошибка при обновлении статьи"
+// @Router /articles/{ID} [put]
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	// Чтение тела запроса
 	body, err := ioutil.ReadAll(r.Body)
@@ -130,7 +145,7 @@ func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Получение ID статьи из URL-параметров
-	articleID := chi.URLParam(r, "authors")
+	articleID := chi.URLParam(r, "articles")
 
 	// Получение статьи из базы данных по ее ID
 	article, err := h.services.ArticleService.GetById(articleID)

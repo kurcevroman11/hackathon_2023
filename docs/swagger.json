@@ -118,6 +118,65 @@
             }
         },
         "/articles/{ID}": {
+            "put": {
+                "description": "Эндпоинт для обновления существующей статьи.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Статьи"
+                ],
+                "summary": "Обновление статьи",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID статьи",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные статьи",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ArticleData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Статья успешно обновлена!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка чтения тела запроса | Ошибка декодирования JSON",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Статья не найдена",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка при обновлении статьи",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{ID}/{articleTitle}": {
             "get": {
                 "description": "Эндпоинт для получения статьи по указанному ID.",
                 "consumes": [
@@ -154,6 +213,38 @@
                     }
                 }
             }
+        },
+        "/authors/": {
+            "get": {
+                "description": "Эндпоинт для получения списка всех авторов.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Авторы"
+                ],
+                "summary": "Получение всех авторов",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Author"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to get all author | Failed to send response",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -183,6 +274,12 @@
                 },
                 "subtitle": {
                     "type": "string"
+                },
+                "theme": {
+                    "$ref": "#/definitions/models.Theme"
+                },
+                "themeId": {
+                    "type": "integer"
                 },
                 "title": {
                     "type": "string"
@@ -223,6 +320,26 @@
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "models.Theme": {
+            "type": "object",
+            "properties": {
+                "b": {
+                    "type": "integer"
+                },
+                "g": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "r": {
+                    "type": "integer"
                 }
             }
         }
