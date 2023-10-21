@@ -22,13 +22,12 @@ func NewAuthorService(rep *repository.Repository, gen *tools.UUIDStringGenerator
 }
 
 func (a AuthorService) Create(author models.Author) (*models.Author, error) {
-	//TODO implement me
-	panic("implement me")
+	author.ID = a.gen.GenerateUUID()
+	return a.rep.AuthorRepository.Create(author)
 }
 
 func (a AuthorService) Update(id string, author models.Author) (*models.Author, error) {
-	//TODO implement me
-	panic("implement me")
+	return a.rep.AuthorRepository.Update(id, author)
 }
 
 func (a AuthorService) GetById(id string) (*models.Author, error) {

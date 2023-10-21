@@ -39,5 +39,14 @@ func (h *Handler) InitRoutes() *chi.Mux {
 		r.Put("/{articleID}", h.UpdateArticle)
 		r.Delete("/{articleID}", h.DeleteArticle)
 	})
+
+	// Создание группы маршрутов для статей
+	router.Route("/authors", func(r chi.Router) {
+		r.Get("/", h.GetArticles)
+		r.Get("/{authorID}", h.GetArticleByID)
+		r.Post("/", h.CreateAuthor)
+		r.Put("/{authorID}", h.UpdateArticle)
+		r.Delete("/{authorID}", h.DeleteArticle)
+	})
 	return router
 }
