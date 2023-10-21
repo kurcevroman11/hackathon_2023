@@ -36,6 +36,18 @@ func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Отправляем JSON-данные в ответе
 	w.Write(jsonData)
 }
+
+// GetArticleByID is a handler function that retrieves an article by its ID.
+//
+// @Summary Получение статьи по ID
+// @Description Эндпоинт для получения статьи по указанному ID.
+// @Tags Статьи
+// @Accept  json
+// @Produce  json
+// @Param ID path string true "ID статьи"
+// @Success 200 {object} models.Article
+// @Failure 404 {string} string "Статья не найдена"
+// @Router /articles/{ID} [get]
 func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/article.html", "templates/head.html", "templates/header_for_articlePage.html", "templates/footer.html")
 	if err != nil {
@@ -58,6 +70,18 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.ExecuteTemplate(w, "articles", data)
 }
+
+// CreateArticle is a handler function that creates a new article.
+//
+// @Summary Создание статьи
+// @Description Эндпоинт для создания новой статьи.
+// @Tags Статьи
+// @Accept json
+// @Produce plain
+// @Param body body models.ArticleData true "Данные статьи"
+// @Success 201 {string} string "Статья успешно создана и сохранена!"
+// @Failure 400 {string} string "Ошибка чтения тела запроса | Ошибка декодирования JSON"
+// @Router /articles/ [post]
 func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {

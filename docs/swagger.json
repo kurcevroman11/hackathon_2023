@@ -76,6 +76,84 @@
                     }
                 }
             }
+        },
+        "/articles/": {
+            "post": {
+                "description": "Эндпоинт для создания новой статьи.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Статьи"
+                ],
+                "summary": "Создание статьи",
+                "parameters": [
+                    {
+                        "description": "Данные статьи",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ArticleData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Статья успешно создана и сохранена!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка чтения тела запроса | Ошибка декодирования JSON",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{ID}": {
+            "get": {
+                "description": "Эндпоинт для получения статьи по указанному ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Статьи"
+                ],
+                "summary": "Получение статьи по ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID статьи",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Article"
+                        }
+                    },
+                    "404": {
+                        "description": "Статья не найдена",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -110,6 +188,17 @@
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ArticleData": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }

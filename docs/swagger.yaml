@@ -23,6 +23,13 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.ArticleData:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
   models.Author:
     properties:
       created_at:
@@ -89,4 +96,55 @@ paths:
             type: array
       tags:
       - Articles
+  /articles/:
+    post:
+      consumes:
+      - application/json
+      description: Эндпоинт для создания новой статьи.
+      parameters:
+      - description: Данные статьи
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.ArticleData'
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: Статья успешно создана и сохранена!
+          schema:
+            type: string
+        "400":
+          description: Ошибка чтения тела запроса | Ошибка декодирования JSON
+          schema:
+            type: string
+      summary: Создание статьи
+      tags:
+      - Статьи
+  /articles/{ID}:
+    get:
+      consumes:
+      - application/json
+      description: Эндпоинт для получения статьи по указанному ID.
+      parameters:
+      - description: ID статьи
+        in: path
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Article'
+        "404":
+          description: Статья не найдена
+          schema:
+            type: string
+      summary: Получение статьи по ID
+      tags:
+      - Статьи
 swagger: "2.0"
