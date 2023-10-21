@@ -5,11 +5,19 @@ import (
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
+// GetArticles @Summary Получить все статьи
+// @Description Получение списка всех статей
+// @Tags Articles
+// @Produce json
+// @Success 200 {array} models.Article
+// @Router /articles [get]
 func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Создание экземпляра структуры
 	data, err := h.services.ArticleService.GetAll()
@@ -46,7 +54,37 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "articles", data)
 }
 func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Ошибка чтения тела запроса", http.StatusBadRequest)
+		return
+	}
 
+	var articleData models.ArticleData
+	if err := json.Unmarshal(body, &articleData); err != nil {
+		http.Error(w, "Ошибка декодирования JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Создание объекта Article на основе данных ArticleData
+	article := models.Article{
+		Title:           articleData.Title,
+		Content:         articleData.Content,
+		PublicationDate: time.Now().String(),
+		AuthorID:        "test",
+		Author:          models.Author{},
+		Categories:      nil,
+		CreateAt:        time.Now(),
+		UpdatedAt:       time.Now(),
+		Image:           "",
+		QRCode:          "",
+		DeletedAt:       nil,
+	}
+
+	h.services.ArticleService.Create(&article)
+	// Отправить ответ клиенту
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("Статья успешно создана и сохранена!"))
 }
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 
@@ -65,6 +103,9 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 
 	articles, err := h.services.ArticleService.GetAll()
 
+	for _, article := range articles {
+		h.services.ArticleService.GenerateQRCode(article)
+	}
 	for _, article := range articles {
 		if len(article.Content) > 900 {
 			article.Content = article.Content[:900] + "..."
@@ -107,13 +148,24 @@ func (h *Handler) inputPage(w http.ResponseWriter, r *http.Request) {
 }
 func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
-	content := r.FormValue("content")
+	content := r.FormValue("editor")
 
 	dest := models.Article{
 		Title: title, Content: content, AuthorID: "test"}
 
 	h.services.ArticleService.Create(&dest)
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+
+	err := h.services.ArticleService.GenerateQRCode(&dest)
+	if err != nil {
+		return
+	}
+
+	// Установка заголовка Content-Type
+	w.Header().Set("Content-Type", "image/svg+xml")
+
+	// Вывод в буфере
+	w.Write([]byte(dest.Image))
+
 }
 
 func Transliterate(input string) string {

@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+type ArticleData struct {
+	Title   string `json:"title"`
+	Content string `json:"content"`
+}
+
 type Author struct {
 	ID        string     `gorm:"primary_key" json:"id"`
 	FirstName string     `json:"first_name"`
@@ -34,5 +39,7 @@ type Article struct {
 	Categories      []Category `gorm:"many2many:article_categories;" json:"categories"`
 	CreateAt        time.Time  `json:"created_at"`
 	UpdatedAt       time.Time  `json:"updated_at"`
+	Image           string
+	QRCode          string
 	DeletedAt       *time.Time `json:"-"`
 }

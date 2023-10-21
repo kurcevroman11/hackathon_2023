@@ -1,12 +1,14 @@
 package Article
 
 import (
-	"github.com/boombuler/barcode"
-	"github.com/boombuler/barcode/qr"
+	"encoding/base64"
+	"fmt"
+	"github.com/skip2/go-qrcode"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
 	"github.com/zhashkevych/todo-app/pkg/tools"
 	"gorm.io/gorm/logger"
+
 	"time"
 )
 
@@ -70,24 +72,18 @@ func (a ArticleService) FakeData() (*models.Article, error) {
 	return a.rep.ArticleRepository.Create(&dest)
 }
 
-func (a ArticleService) GenerateQRCode(id string) (barcode.Barcode, error) {
-	article, err := a.GetById(id)
-	if err != nil {
-		return nil, err
-	}
-
+func (a ArticleService) GenerateQRCode(desr *models.Article) error {
 	// Создаем QR-код из текста
-	qrCode, err := qr.Encode(article.Title, qr.M, qr.Auto)
+	valueForQr := fmt.Sprint("/")
+	png, err := qrcode.Encode(valueForQr, qrcode.Medium, 256)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	// Устанавливаем размер QR-кода (по умолчанию 256x256)
-	qrCode, err = barcode.Scale(qrCode, 256, 256)
-	if err != nil {
-		return nil, err
-	}
+	encodedFile := base64.StdEncoding.EncodeToString(png)
+	dataURI := "data:image/png;base64," + encodedFile
 
-	return qrCode, err
-
+	// Сохраняем Data URI в модели статьи
+	desr.QRCode = dataURI
+	return nil
 }

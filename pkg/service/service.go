@@ -1,7 +1,6 @@
 package service
 
 import (
-	"github.com/boombuler/barcode"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
 	"github.com/zhashkevych/todo-app/pkg/service/Article"
@@ -18,7 +17,7 @@ type ArticleService interface {
 	Update(id string, article models.Article) (*models.Article, error)
 	GetById(id string) (*models.Article, error)
 	GetAll() ([]*models.Article, error)
-	GenerateQRCode(id string) (barcode.Barcode, error)
+	GenerateQRCode(*models.Article) error
 	Delete(id string) (bool, error)
 	FakeData() (*models.Article, error)
 }

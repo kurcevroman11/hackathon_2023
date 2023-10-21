@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/go-chi/chi"
+	"github.com/swaggo/http-swagger"
 	_ "github.com/zhashkevych/todo-app/docs"
 	"github.com/zhashkevych/todo-app/pkg/service"
 	"net/http"
@@ -21,6 +22,10 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	router.Get("/", h.MainPage)
 	router.Get("/input", h.inputPage)
 	router.Post("/save", h.savePage)
+
+	router.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8000/swagger/doc.json"), //The url pointing to API definition
+	))
 
 	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
