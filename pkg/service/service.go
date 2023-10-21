@@ -34,6 +34,7 @@ type ThemeService interface {
 	GetById(id string) (*models.Theme, error)
 	GetAll() ([]*models.Theme, error)
 	Delete(id string) (bool, error)
+	FakeDate() (*models.Theme, error)
 }
 
 type Service struct {

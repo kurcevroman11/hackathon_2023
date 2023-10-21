@@ -14,9 +14,8 @@
         <label for="theme" class=" mb-3" >Выберите тему:</label>
 
         <select id="theme" class="rounded border border-rounded-2">
-            <option value="255,255,255" class="rounded border border-rounded-2">Поумолчанию</option>
-            {{range $index, $item := . }}
-                <option value="{{$item.R}},{{$item.G}},{{$item.B}}" class="rounded border border-rounded-2">{{$item.Name}}</option>
+        {{range $index, $item := . }}
+                <option value="{{$item.Id}}" class="rounded border border-rounded-2">{{$item.Name}}</option>
             {{end}}
         </select>
 
@@ -39,9 +38,22 @@
 
                 if (selectedOption) {
                     // Разбиваем значение "value" на массив, разделяя его запятыми и преобразуя в числа
-                    const [r, g, b] = selectedOption.value.split(',').map(Number);
+                    const themeId = selectedOption.value;
 
-                    editorElement.style.backgroundColor = `rgb(${r},${g},${b}, 0.6)`
+                    var thems
+
+                    fetch(`http://localhost:8000/theme/${themeId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Обработка данных, полученных от сервера
+                            console.log(data);
+                            thems  = data
+                            editorElement.style.backgroundColor = `rgb(${thems.R},${thems.G},${thems.B}, 0.6)`                        })
+                        .catch(error => {
+                            console.error('Ошибка при запросе данных:', error);
+                        });
+
+
                 } else {
                     body.style.backgroundColor = 'white';
                     body.style.color = 'black';
@@ -133,11 +145,11 @@
 
             // Создание объекта для отправки данных
             var data = {
+                Title:titleValue,
                 Subtitle: SubtitleValue,
+                Content: content,
+                Theme: themeValue,
                 CreateAt: CreateAtValue,
-                theme: themeValue,
-                title:titleValue,
-                content: content
             };
 
             // Опции для POST-запроса

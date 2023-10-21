@@ -24,6 +24,18 @@ func NewThemeServiceImpl(rep *repository.Repository, gen *tools.UUIDStringGenera
 func (t ThemeServiceImpl) Create(theme *models.Theme) (*models.Theme, error) {
 	return t.rep.ThemeRepository.Create(theme)
 }
+func (t ThemeServiceImpl) FakeDate() (*models.Theme, error) {
+
+	theme := &models.Theme{
+		Id:   t.gen.GenerateUUID(),
+		Name: "По умолчанию",
+		R:    255,
+		G:    255,
+		B:    255,
+	}
+	return t.rep.ThemeRepository.Create(theme)
+
+}
 
 func (t ThemeServiceImpl) Update(id string, author models.Theme) (*models.Theme, error) {
 	//TODO implement me
@@ -31,8 +43,7 @@ func (t ThemeServiceImpl) Update(id string, author models.Theme) (*models.Theme,
 }
 
 func (t ThemeServiceImpl) GetById(id string) (*models.Theme, error) {
-	//TODO implement me
-	panic("implement me")
+	return t.rep.ThemeRepository.GetById(id)
 }
 
 func (t ThemeServiceImpl) GetAll() ([]*models.Theme, error) {

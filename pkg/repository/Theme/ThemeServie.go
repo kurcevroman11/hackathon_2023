@@ -38,8 +38,12 @@ func (t ThemeRepositoryImpl) Update(id string, author models.Theme) (*models.The
 }
 
 func (t ThemeRepositoryImpl) GetById(id string) (*models.Theme, error) {
-	//TODO implement me
-	panic("implement me")
+	var dest *models.Theme
+	result := t.db.Where("ID = ?", id).Find(&dest)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return dest, nil
 }
 
 func (t ThemeRepositoryImpl) GetAll() ([]*models.Theme, error) {

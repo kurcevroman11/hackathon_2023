@@ -73,16 +73,19 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 
 	// Создание объекта Article на основе данных ArticleData
 	article := models.Article{
+
 		Title:           articleData.Title,
 		Content:         articleData.Content,
-		PublicationDate: time.Now().String(),
-		AuthorID:        "test",
-		Author:          models.Author{},
-		CreateAt:        time.Now(),
-		UpdatedAt:       time.Now(),
-		Image:           "",
-		QRCode:          "",
-		DeletedAt:       nil,
+		Subtitle:        articleData.Subtitle,
+		PublicationDate: articleData.CreateAt,
+		ThemeId:         articleData.Theme,
+		AuthorID:        "Test",
+		//Author:          models.Author{ID: "Test", FirstName: "Test"},
+		CreateAt:  time.Now(),
+		UpdatedAt: time.Now(),
+		Image:     "",
+		QRCode:    "",
+		DeletedAt: nil,
 	}
 
 	h.services.ArticleService.Create(&article)
@@ -146,21 +149,7 @@ func (h *Handler) inputPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	thems := []models.Theme{{
-		Id:   1,
-		Name: "Темная тема",
-		R:    0,
-		G:    0,
-		B:    0,
-	}, {
-		Id:   1,
-		Name: "Красная",
-		R:    255,
-		G:    0,
-		B:    0,
-	},
-	}
-
+	thems, err := h.services.ThemeService.GetAll()
 	if err != nil {
 		log.Print("err :", err.Error())
 		return

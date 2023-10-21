@@ -37,5 +37,12 @@ func (h *Handler) InitRoutes() *chi.Mux {
 		r.Put("/{articleID}", h.UpdateArticle)
 		r.Delete("/{articleID}", h.DeleteArticle)
 	})
+	router.Route("/theme", func(r chi.Router) {
+		r.Get("/", h.GetTheme)
+		r.Get("/{ID}", h.GetThemeByID)
+		r.Post("/", h.CreateTheme)
+		r.Put("/{themeID}", h.UpdateTheme)
+		r.Delete("/{themeID}", h.DeleteTheme)
+	})
 	return router
 }
