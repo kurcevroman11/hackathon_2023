@@ -44,8 +44,11 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	}
 	articleId := chi.URLParam(r, "ID")
 	article, err := h.services.ArticleService.GetById(articleId)
-
-	h.services.ArticleService.GenerateQRCode(article)
+	if err != nil {
+		log.Print("err :", err.Error())
+		return
+	}
+	h.services.ArticleService.GenerateQRCode(r.URL.String(), article)
 
 	data := struct {
 		Article *models.Article
@@ -152,19 +155,18 @@ func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	dest := models.Article{
 		Title: title, Content: content, AuthorID: "test"}
 
-	h.services.ArticleService.Create(&dest)
-
-	err := h.services.ArticleService.GenerateQRCode(&dest)
-	if err != nil {
+	if title == "" || content == "" {
+		http.Error(w, "Title and content cannot be empty", http.StatusBadRequest)
 		return
 	}
+	h.services.ArticleService.Create(&dest)
 
 	// Установка заголовка Content-Type
 	w.Header().Set("Content-Type", "image/svg+xml")
 
 	// Вывод в буфере
 	w.Write([]byte(dest.Image))
-
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func Transliterate(input string) string {

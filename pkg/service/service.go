@@ -17,7 +17,7 @@ type ArticleService interface {
 	Update(id string, article models.Article) (*models.Article, error)
 	GetById(id string) (*models.Article, error)
 	GetAll() ([]*models.Article, error)
-	GenerateQRCode(*models.Article) error
+	GenerateQRCode(str string, dest *models.Article) error
 	Delete(id string) (bool, error)
 	FakeData() (*models.Article, error)
 }
