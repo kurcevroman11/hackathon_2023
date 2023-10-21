@@ -5,9 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	httpSwagger "github.com/swaggo/http-swagger"
 	"github.com/zhashkevych/todo-app/pkg/tools"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -29,9 +27,6 @@ import (
 // @BasePath /
 
 func main() {
-	http.Handle("/swagger-ui/", httpSwagger.Handler(
-		httpSwagger.URL("docs/swagger.json"),
-	))
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
 	if err := initConfig(); err != nil {
@@ -80,7 +75,6 @@ func main() {
 
 	// Запустите сервер
 	r.Run(":8080")
-	http.ListenAndServe(":8080", nil)
 }
 
 func initConfig() error {
