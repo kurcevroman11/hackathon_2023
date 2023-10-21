@@ -28,7 +28,7 @@ $(document).ready(function() {
                 scrollLocked = false;
                 $('body').css('overflow', 'auto');
                 sessionStorage.setItem('animationCompleted', 'true'); // Установить флаг анимации в sessionStorage
-                animationContainer.remove(); // Удалить элемент из DOM
+                animationContainer.hide(); // Скрыть элемент, но не удалять его
             });
         }, 4800); // Установите здесь время в миллисекундах, через которое анимация должна уйти
     }

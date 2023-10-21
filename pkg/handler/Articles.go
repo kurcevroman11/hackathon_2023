@@ -116,6 +116,7 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 	for _, article := range articles {
 
 		titleURL := strings.ReplaceAll(strings.ToLower(article.Title), " ", "-")
+		titleURL = strings.Replace(titleURL, "/", "", -1)
 		titleURL = Transliterate(titleURL)
 
 		// Форматирование даты публикации в строку "2006-01-02"
@@ -164,6 +165,8 @@ func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 
 	// Вывод в буфере
 	w.Write([]byte(dest.Image))
+
+	http.Redirect(w, r, " ", http.StatusSeeOther)
 
 }
 
