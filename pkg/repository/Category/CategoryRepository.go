@@ -8,11 +8,10 @@ import (
 
 type CategoryRepository struct {
 	db     *gorm.DB
-	gen    string
 	Logger logger.Interface
 }
 
-func NewCategoryRepository(db *gorm.DB, gen *string, Logger logger.Interface) CategoryRepository {
+func NewCategoryRepository(db *gorm.DB, Logger logger.Interface) CategoryRepository {
 	return CategoryRepository{
 		db:     db,
 		Logger: Logger,

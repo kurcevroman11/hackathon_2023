@@ -7,12 +7,11 @@ import (
 )
 
 type AuthorRepository struct {
-	db *gorm.DB
-
+	db     *gorm.DB
 	Logger logger.Interface
 }
 
-func NewAuthorRepository(db *gorm.DB, gen *string, Logger logger.Interface) AuthorRepository {
+func NewAuthorRepository(db *gorm.DB, Logger logger.Interface) AuthorRepository {
 	return AuthorRepository{
 		db:     db,
 		Logger: Logger,
@@ -20,13 +19,25 @@ func NewAuthorRepository(db *gorm.DB, gen *string, Logger logger.Interface) Auth
 }
 
 func (a AuthorRepository) Create(author models.Author) (*models.Author, error) {
-	//TODO implement me
-	panic("implement me")
+	err := a.db.Create(&author).Error
+	if err != nil {
+		// Обработка ошибки при сохранении данных в базе данных
+		a.Logger.Error(nil, "Ошибка при создании автора: ")
+		return nil, err
+	}
+
+	return &author, nil
 }
 
 func (a AuthorRepository) Update(id string, author models.Author) (*models.Author, error) {
-	//TODO implement me
-	panic("implement me")
+	err := a.db.Create(&author).Error
+	if err != nil {
+		// Обработка ошибки при сохранении данных в базе данных
+		a.Logger.Error(nil, "Ошибка при создании автора: ")
+		return nil, err
+	}
+
+	return &author, nil
 }
 
 func (a AuthorRepository) GetById(id string) (*models.Author, error) {
