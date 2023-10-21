@@ -45,6 +45,8 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	articleId := chi.URLParam(r, "ID")
 	article, err := h.services.ArticleService.GetById(articleId)
 
+	h.services.ArticleService.GenerateQRCode(article)
+
 	data := struct {
 		Article *models.Article
 	}{
@@ -103,9 +105,6 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 
 	articles, err := h.services.ArticleService.GetAll()
 
-	for _, article := range articles {
-		h.services.ArticleService.GenerateQRCode(article)
-	}
 	for _, article := range articles {
 		if len(article.Content) > 900 {
 			article.Content = article.Content[:900] + "..."
