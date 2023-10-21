@@ -7,6 +7,18 @@ import (
 	"net/http"
 )
 
+// CreateAuthor is a handler function that create new authors.
+//
+// @summary Создание автора
+// @description Эндпоинт для создания нового автора.
+// @tags Авторы
+// @param {object} w - Ответ HTTP
+// @param {object} r - Запрос HTTP
+// @produces application/json
+// @consumes application/json
+// @response 201 - Успешное создание автора
+// @response 400 - Ошибка при парсинге JSON
+// @response 500 - Ошибка при создании автора
 func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	var input models.Author
 
@@ -33,6 +45,17 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// GetAllAuthor is a handler function that returns all authors.
+//
+// @Summary Get all authors
+// @Description Returns a list of all authors.
+// @Tags Authors
+// @Produce json
+// @Success 200 {array} Author
+// @Failure 500 {string} string "Failed to get all authors"
+// @Failure 500 {string} string "Failed to send response"
+// @Router /authors [get]
 func (h *Handler) GetAllAuthor(w http.ResponseWriter, r *http.Request) {
 
 	out, err := h.services.AuthorService.GetAll()
@@ -51,6 +74,20 @@ func (h *Handler) GetAllAuthor(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// UpdateAuthor is a handler function that updates an author.
+//
+// @Summary Update an author
+// @Description Updates the details of a specific author.
+// @Tags Authors
+// @Accept json
+// @Param authors path string true "Author ID"
+// @Param input body Author true "Author object to be updated"
+// @Produce json
+// @Success 200 {object} Author
+// @Failure 400 {string} string "Invalid JSON"
+// @Failure 500 {string} string "Failed to update author"
+// @Failure 500 {string} string "Failed to send response"
+// @Router /authors/{authors} [put]
 func (h *Handler) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 	// Получение значения ID из URL
 	authorID := chi.URLParam(r, "authors")
@@ -81,6 +118,18 @@ func (h *Handler) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GetByIdAuthor is a handler function that retrieves an author by ID.
+//
+// @Summary Get author by ID
+// @Description Retrieves the details of a specific author by ID.
+// @Tags Authors
+// @Produce json
+// @Param authorID path string true "Author ID"
+// @Success 200 {object} Author
+// @Failure 404 {string} string "Author Not Found"
+// @Failure 500 {string} string "Failed to get author"
+// @Failure 500 {string} string "Failed to marshal author data"
+// @Router /authors/{authorID} [get]
 func (h *Handler) GetByIdAuthor(w http.ResponseWriter, r *http.Request) {
 	// Получение ID автора из URL
 	authorID := chi.URLParam(r, "authorID")
@@ -111,6 +160,16 @@ func (h *Handler) GetByIdAuthor(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
+// DeleteAuthor is a handler function that deletes an author by ID.
+//
+// @Summary Delete author by ID
+// @Description Deletes a specific author by ID.
+// @Tags Authors
+// @Param authorID path string true "Author ID"
+// @Success 204 "No Content"
+// @Failure 404 {string} string "Author Not Found"
+// @Failure 500 {string} string "Failed to delete author"
+// @Router /authors/{authorID} [delete]
 func (h *Handler) DeleteAuthor(w http.ResponseWriter, r *http.Request) {
 	// Получение ID автора из URL
 	authorID := chi.URLParam(r, "authorID")
