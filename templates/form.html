@@ -8,17 +8,94 @@
 
 
 
-<main role="main" class="inner cover">
-    <h1 class="cover-heading">Форма добавления статей</h1>
-    <form action="/save" method="post">
-        <input type="text" name="title" id="title" placeholder="Ввидите название статьи" class="form-control"><br>
-        <textarea name="anons" id="anons"  class="form-control" placeholder="Ввидите анонс статьи"></textarea><br>
-         <textarea name="content" id="content"  class="form-control" placeholder="Ввидите описание статьи"></textarea><br>
 
-        <button class="btn btn-warning">Добавить</button>
-    </form>
-</main>
+    <input type="text"  id="title" placeholder="Ввидите название статьи" class="form-control"><br>
+    <div id="editor" name="editor" ></div>
+    <button class="btn btn-warning" id="saveButton">Добавить</button>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script>
+        // Инициализация Quill редактора
+        var quill = new Quill('#editor', {
+            theme: 'snow', // Тема редактора (по умолчанию "snow")
 
+            // Настройки панели инструментов
+            modules: {
+                toolbar: [
+                    [{ 'header': '1' }, { 'header': '2' }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['link', 'image', 'video'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    [{ 'align': [] }],
+                    ['clean']
+                ]
+            },
+
+            // Настройки форматирования текста
+            formats: [
+                'header', 'bold', 'italic', 'underline', 'strike',
+                'link', 'image', 'video', 'list', 'align'
+            ]
+        });
+
+        // Обработка события изменения контента
+        quill.on('text-change', function(delta, oldDelta, source) {
+            // Здесь вы можете обрабатывать изменения текста
+            console.log('Text changed:', delta);
+        });
+        // Получение кнопки по ее ID
+        var saveButton = document.getElementById('saveButton');
+
+
+        // Добавление обработчика события на клик кнопки
+        saveButton.addEventListener('click', function() {
+            // Вызов функции sendArticleContent при клике
+            sendArticleContent();
+        });
+        // Получение содержимого редактора
+        function getEditorContent() {
+            var content = quill.root.innerHTML;
+            console.log('Editor content:', content);
+        }
+
+        // Установка содержимого редактора
+        function sendArticleContent() {
+            // Получение содержимого редактора
+            var content = quill.root.innerHTML;
+            var titleInput = document.getElementById('title');
+
+// Получение значения из элемента
+            var titleValue = titleInput.value;
+
+            console.log(titleValue)
+            // Создание объекта для отправки данных
+            var data = {
+                title:titleValue,
+                content: content
+            };
+
+            // Опции для POST-запроса
+            var options = {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            // Отправка POST-запроса
+            fetch('/articles', options)
+                .then(function(response) {
+                    if (response.status === 201) {
+                        console.log('Статья успешно создана и сохранена!');
+                    } else {
+                        console.error('Ошибка при создании статьи:', response.statusText);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Ошибка при отправке запроса:', error);
+                });
+        }
+    </script>
     {{template "footer" }}
 </div>>
 {{end}}

@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"github.com/alecthomas/template"
 	"github.com/zhashkevych/todo-app/pkg/models"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 )
 
 // GetArticles @Summary Получить все статьи
@@ -36,7 +38,37 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 
 }
 func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Ошибка чтения тела запроса", http.StatusBadRequest)
+		return
+	}
 
+	var articleData models.ArticleData
+	if err := json.Unmarshal(body, &articleData); err != nil {
+		http.Error(w, "Ошибка декодирования JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Создание объекта Article на основе данных ArticleData
+	article := models.Article{
+		Title:           articleData.Title,
+		Content:         articleData.Content,
+		PublicationDate: time.Now().String(),
+		AuthorID:        "test",
+		Author:          models.Author{},
+		Categories:      nil,
+		CreateAt:        time.Now(),
+		UpdatedAt:       time.Now(),
+		Image:           "",
+		QRCode:          "",
+		DeletedAt:       nil,
+	}
+
+	h.services.ArticleService.Create(&article)
+	// Отправить ответ клиенту
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("Статья успешно создана и сохранена!"))
 }
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 
@@ -77,7 +109,7 @@ func (h *Handler) InputPaig(w http.ResponseWriter, r *http.Request) {
 }
 func (h *Handler) savePaig(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
-	content := r.FormValue("content")
+	content := r.FormValue("editor")
 
 	dest := models.Article{
 		Title: title, Content: content, AuthorID: "test"}
