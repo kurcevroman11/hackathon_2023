@@ -16,6 +16,83 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/api/v1/authors": {
+            "get": {
+                "description": "Эндпоинт для получения автора по ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Авторы"
+                ],
+                "summary": "Получение автора по ID",
+                "responses": {
+                    "200": {
+                        "description": "Успешное получение автора по ID",
+                        "schema": {
+                            "$ref": "#/definitions/models.Author"
+                        }
+                    },
+                    "404": {
+                        "description": "Автор не найден",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка сериализации данных автора",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Эндпоинт для обновления автора.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Авторы"
+                ],
+                "summary": "Обновление автора",
+                "parameters": [
+                    {
+                        "description": "Данные автора",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Author"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Успешное обновление автора",
+                        "schema": {
+                            "$ref": "#/definitions/models.Author"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid JSON",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка отправки ответа",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Эндпоинт для создания нового автора.",
                 "consumes": [
@@ -59,6 +136,44 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "Эндпоинт для удаления автора по ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Авторы"
+                ],
+                "summary": "Удаление автора по ID",
+                "parameters": [
+                    {
+                        "description": "Данные автора",
+                        "name": "remove",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Author"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Содержимое отсутствует"
+                    },
+                    "404": {
+                        "description": "Автор не найден",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка удаления автора",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/articles": {
@@ -78,6 +193,38 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.Article"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "/authors/": {
+            "get": {
+                "description": "Эндпоинт для получения списка всех авторов.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Авторы"
+                ],
+                "summary": "Получение всех авторов",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Author"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to get all author | Failed to send response",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
