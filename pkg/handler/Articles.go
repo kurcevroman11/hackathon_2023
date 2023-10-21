@@ -111,8 +111,8 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 	articles, err := h.services.ArticleService.GetAll()
 
 	for _, article := range articles {
-		if len(article.Content) > 900 {
-			article.Content = article.Content[:900] + "..."
+		if len(article.Content) > 300 {
+			article.Content = article.Content[:300] + "..."
 		}
 	}
 

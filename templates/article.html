@@ -7,14 +7,15 @@
 
 
 <main class="container">
-    <div class="card text-center mt-4"  id="container"  style="background-image:'https://catherineasquithgallery.com/uploads/posts/2021-03/1614840031_172-p-fon-dlya-shkolnogo-saita-250.jpg';">
+    <div class="card text-center mt-4 p-3 border-2 border border-primary"  id="container" >
         <div class="row">
             <div class="col-md-5">
-                <img src="https://fight.ru/wp-content/uploads/2022/07/999f412d50215fc11045a7cb420bc719-scaled.jpg" alt="" class="card-img-bottom">
+                <img src="https://fight.ru/wp-content/uploads/2022/07/999f412d50215fc11045a7cb420bc719-scaled.jpg" alt="" class="card-img-bottom rounded">
             </div>
             <div class="col-md-7">
                 <div class="card-body text-start">
-                    <h5 class="card-title">{{ .Article.Title }}</h5>
+                    <h1 class="card-title">{{ .Article.Title }}</h1>
+                    <h3 class="card-title">{{ .Article.Title }}</h3>
                     <p class="card-text">{{ .Article.Content }}</p>
                 </div>
             </div>
