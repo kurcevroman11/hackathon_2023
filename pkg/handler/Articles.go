@@ -75,13 +75,14 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	// Создание объекта Article на основе данных ArticleData
 	article := models.Article{
 		Title:           articleData.Title,
+		Subtitle:        articleData.Subtitle,
 		Content:         articleData.Content,
 		PublicationDate: time.Now().String(),
 		AuthorID:        "test",
 		Author:          models.Author{},
 		CreateAt:        time.Now(),
 		UpdatedAt:       time.Now(),
-		Image:           "",
+		Image:           articleData.Image,
 		QRCode:          "",
 		DeletedAt:       nil,
 	}
@@ -162,11 +163,6 @@ func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	h.services.ArticleService.Create(&dest)
-
-	err := h.services.ArticleService.GenerateQRCode(&dest)
-	if err != nil {
-		return
-	}
 
 	// Установка заголовка Content-Type
 	w.Header().Set("Content-Type", "image/svg+xml")

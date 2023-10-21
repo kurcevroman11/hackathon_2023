@@ -27,7 +27,6 @@ func (a ArticleRepository) Create(article *models.Article) (*models.Article, err
 	if tx.RowsAffected == 0 {
 		return nil, Error.RecordNotCreate
 	}
-
 	return article, nil
 }
 

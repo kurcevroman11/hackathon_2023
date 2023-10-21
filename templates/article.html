@@ -8,11 +8,13 @@
     <div class="card text-center mt-4">
         <div class="row p-3">
             <div class="col-md-5">
-                <img src="https://fight.ru/wp-content/uploads/2022/07/999f412d50215fc11045a7cb420bc719-scaled.jpg" alt="" class="card-img-bottom border rounded">
+                <img src="{{ .Article.Image }}" alt="" class="card-img-bottom border rounded">
             </div>
             <div class="col-md-7">
                 <div class="card-body text-start">
                     <h5 class="card-title">{{ .Article.Title }}</h5>
+                    <p class="card-text fst-italic">{{ .Article.CreateAt.UTC.Format "2006-01-02"  }}</p>
+                    <p class="card-text">{{ .Article.Subtitle }}</p>
                     <div class="img-fluid">
                         {{ .Article.Content }}
                     </div>

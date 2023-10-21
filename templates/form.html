@@ -7,9 +7,13 @@
     {{template "header" }}
 
     <div class="container mt-3">
-        <input type="text" id="title" placeholder="Введите название статьи" class="form-control"><br>
-        <input type="text" id="Subtitle" placeholder="Введите подзаголовок статьи" class="form-control"><br>
-        <input type="text" id="CreateAt" class="form-control md-2" placeholder="Введите подзаголовок статьи" value="" readonly>
+        <p>Выберите изображение для статьи:</p>
+        <div class="mb-3">
+            <input type="file" id="imageInput" class="form-control" accept="image/*">
+        </div>
+        <input type="text" id="title" placeholder="Введите название статьи" class="form-control" required><br>
+        <input type="text" id="subtitle" placeholder="Введите подзаголовок статьи" class="form-control" required><br>
+        <input type="text" id="createAt" class="form-control md-2" placeholder="Введите подзаголовок статьи" value="" readonly>
         <script>
             // Получить текущую дату
             var currentDate = new Date();
@@ -18,17 +22,15 @@
             var formattedDate = currentDate.getDate() + '.' + (currentDate.getMonth() + 1) + '.' + currentDate.getFullYear();
 
             // Установить отформатированную дату в поле ввода
-            document.getElementById("CreateAt").value = formattedDate;
+            document.getElementById("createAt").value = formattedDate;
         </script>
         <div id="editor" name="editor" placeholder="Введите текст статьи" class="h-50 p3 "></div>
-        <button class="btn btn-warning mt-2" id="saveButton">Добавить</button>
+        <button type="submit" class="btn btn-primary mt-2" id="saveButton">Добавить</button>
     </div>
 
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
-
-
         var quill = new Quill('#editor', {
             theme: 'snow', // Тема редактора (по умолчанию "snow")
 
@@ -58,62 +60,52 @@
             // Здесь вы можете обрабатывать изменения текста
             console.log('Text changed:', delta);
         });
-        // Получение кнопки по ее ID
-        var saveButton = document.getElementById('saveButton');
 
 
-        // Добавление обработчика события на клик кнопки
-        saveButton.addEventListener('click', function() {
-            // Вызов функции sendArticleContent при клике
-            sendArticleContent();
-        });
-        // Получение содержимого редактора
-        function getEditorContent() {
-            var content = quill.root.innerHTML;
-            console.log('Editor content:', content);
-        }
+        // Обработчик события для кнопки сохранения
+        document.getElementById("saveButton").addEventListener("click", function () {
 
-        // Установка содержимого редактора
-        function sendArticleContent() {
-            // Получение содержимого редактора
-            var content = quill.root.innerHTML;
-            var titleInput = document.getElementById('title');
+            // Находим элементы по их id
+            var imageInput = document.querySelector("input[type='file']");
+            var titleInput = document.getElementById("title");
+            var subtitleInput = document.getElementById("subtitle");
+            var createAtInput = document.getElementById("createAt");
+            var editorInput = document.getElementById("editor");
+            // Создаем объект FormData
+            var formData = new FormData();
 
-// Получение значения из элемента
-            var titleValue = titleInput.value;
+            // Получаем значения из других полей (title, subtitle, createAt, content)
+            var title = titleInput.value;
+            var subtitle = subtitleInput.value;
+            var createAt = createAtInput.value;
+            var content = editorInput.value; // Если это поле для ввода текста
+            var selectedFile = imageInput.value;
+            // Добавляем все данные в объект FormData
+            formData.append("title", title);
+            formData.append("subtitle", subtitle);
+            formData.append("createAt", createAt);
+            formData.append("content", content);
+            formData.append("image", selectedFile);
 
-            console.log(titleValue)
-            // Создание объекта для отправки данных
-            var data = {
-                title:titleValue,
-                content: content
-            };
-
-            // Опции для POST-запроса
-            var options = {
+            // Отправляем formData на сервер
+            fetch('/articles', {
                 method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
+                body: formData
+            }).then(function (response) {
+                if (response.ok) {
+                    // Данные успешно отправлены
+                    console.log('Статья успешно создана.');
+                } else {
+                    // Обработка ошибки
+                    console.error('Произошла ошибка при создании статьи.');
                 }
-            };
+            }).catch(function (error) {
+                console.error('Ошибка при отправке данных:', error);
+            });
 
-            // Отправка POST-запроса
-            fetch('/articles', options)
-                .then(function(response) {
-                    if (response.status === 201) {
-                        console.log('Статья успешно создана и сохранена!');
-                    } else {
-                        console.error('Ошибка при создании статьи:', response.statusText);
-                    }
-                })
-                .catch(function(error) {
-                    console.error('Ошибка при отправке запроса:', error);
-                });
-            document.location.href = "/"
-        }
+            document.location.href = '/';
+        });
     </script>
-
     {{template "footer" }}
 
 {{end}}

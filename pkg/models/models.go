@@ -5,8 +5,11 @@ import (
 )
 
 type ArticleData struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
+	Title    string `json:"title"`
+	Subtitle string `json:"subtitle"`
+	CreateAt string `json:"createAt"`
+	Content  string `json:"content"`
+	Image    []byte `json:"image"`
 }
 
 type Author struct {
@@ -30,7 +33,7 @@ type Article struct {
 	Author          Author    `json:"author" gorm:"foreignKey:AuthorID;preload:true"`
 	CreateAt        time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
-	Image           string
+	Image           []byte
 	QRCode          string
 	DeletedAt       *time.Time `json:"-"`
 }

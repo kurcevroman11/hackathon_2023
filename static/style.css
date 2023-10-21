@@ -1,6 +1,9 @@
 .logo:hover{
     color: #1e25ea;
 }
+.active{
+    color: #1e25ea;!important;
+}
 .animation-container{
     position: fixed;
     top: 0;
