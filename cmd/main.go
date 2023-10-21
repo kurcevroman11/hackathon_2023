@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
+	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/zhashkevych/todo-app/pkg/tools"
 	"os"
@@ -25,10 +25,6 @@ import (
 
 // @host localhost:8000
 // @BasePath /
-
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
@@ -75,11 +71,7 @@ func main() {
 	}
 	r := gin.Default()
 
-	// Импортируйте маршруты, которые вы хотите задокументировать с помощью Swagger
-	// ...
-
-	// Передайте пути к gin-swagger
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// Запустите сервер
 	r.Run(":8080")

@@ -15,6 +15,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/authors": {
+            "post": {
+                "description": "Эндпоинт для создания нового автора.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Авторы"
+                ],
+                "summary": "Создание автора",
+                "parameters": [
+                    {
+                        "description": "Данные автора",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Author"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Успешное создание автора",
+                        "schema": {
+                            "$ref": "#/definitions/models.Author"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка при парсинге JSON",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка при создании автора",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/articles": {
             "get": {
                 "description": "Получение списка всех статей",
@@ -45,12 +91,6 @@ const docTemplate = `{
                 "author": {
                     "$ref": "#/definitions/models.Author"
                 },
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Category"
-                    }
-                },
                 "content": {
                     "type": "string"
                 },
@@ -60,7 +100,16 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "image": {
+                    "type": "string"
+                },
                 "publication_date": {
+                    "type": "string"
+                },
+                "qrcode": {
+                    "type": "string"
+                },
+                "subtitle": {
                     "type": "string"
                 },
                 "title": {
@@ -93,30 +142,6 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
-        },
-        "models.Category": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
         }
     }
 }`
