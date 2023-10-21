@@ -1,10 +1,15 @@
 package Article
 
 import (
+	"encoding/base64"
+	"fmt"
+	"github.com/skip2/go-qrcode"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"github.com/zhashkevych/todo-app/pkg/repository"
 	"github.com/zhashkevych/todo-app/pkg/tools"
 	"gorm.io/gorm/logger"
+
+	"time"
 )
 
 type ArticleService struct {
@@ -40,4 +45,44 @@ func (a ArticleService) GetAll() ([]*models.Article, error) {
 
 func (a ArticleService) Delete(id string) (bool, error) {
 	return a.rep.ArticleRepository.Delete(id)
+}
+func (a ArticleService) FakeData() (*models.Article, error) {
+
+	dest := models.Article{
+		ID:              a.gen.GenerateUUID(),
+		Title:           "<h1>Test_Title</h1>",
+		Content:         "Test_Title",
+		PublicationDate: "Test_Data",
+		AuthorID:        "",
+		Author: models.Author{
+			ID:        "test",
+			FirstName: "Tests",
+			LastName:  "Tests",
+			Email:     "Tests@mail.com",
+			CreateAt:  time.Time{},
+			UpdatedAt: time.Time{},
+			DeletedAt: nil,
+		},
+		CreateAt:  time.Time{},
+		UpdatedAt: time.Time{},
+		DeletedAt: nil,
+	}
+
+	return a.rep.ArticleRepository.Create(&dest)
+}
+
+func (a ArticleService) GenerateQRCode(str string, dest *models.Article) error {
+	// Создаем QR-код из текста
+	valueForQr := fmt.Sprint(str)
+	png, err := qrcode.Encode(valueForQr, qrcode.Medium, 256)
+	if err != nil {
+		return err
+	}
+
+	encodedFile := base64.StdEncoding.EncodeToString(png)
+	dataURI := "data:image/png;base64," + encodedFile
+
+	// Сохраняем Data URI в модели статьи
+	dest.QRCode = dataURI
+	return nil
 }
