@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/zhashkevych/todo-app/pkg/tools"
 	"os"
 	"os/signal"
 	"syscall"
@@ -48,8 +49,9 @@ func main() {
 		logrus.Fatalf("failed to initialize db: %s", err.Error())
 	}
 
-	repos := repository.NewRepository(db)
-	services := service.NewService(repos)
+	gen := tools.NewGen()
+	repos := repository.NewRepository(db, db.Logger)
+	services := service.NewService(repos, &gen, db.Logger)
 
 	handlers := handler.NewHandler(services)
 
