@@ -1,26 +1,17 @@
-# REST API Для Создания TODO Списков на Go
+# Web application for articles
 
-## <a href="https://www.youtube.com/playlist?list=PLbTTxxr-hMmyFAvyn7DeOgNRN8BQdjFm8">Видеокурс на YouTube</a>
+________
 
-## В курсе разобранны следующие концепции:
-- Разработка Веб-Приложений на Go, следуя дизайну REST API.
-- Работа с фреймворком <a href="https://github.com/gin-gonic/gin">gin-gonic/gin</a>.
-- Подход Чистой Архитектуры в построении структуры приложения. Техника внедрения зависимости.
-- Работа с БД Postgres. Запуск из Docker. Генерация файлов миграций. 
-- Конфигурация приложения с помощью библиотеки <a href="https://github.com/spf13/viper">spf13/viper</a>. Работа с переменными окружения.
-- Работа с БД, используя библиотеку <a href="https://github.com/jmoiron/sqlx">sqlx</a>.
-- Регистрация и аутентификация. Работа с JWT. Middleware.
-- Написание SQL запросов.
-- Graceful Shutdown
+![GitHub go.mod Go version (branch & subdirectory of monorepo)](https://img.shields.io/github/go-mod/go-version/kurcevroman11/hackathon_2023/main)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/kurcevroman11/hackathon_2023)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/kurcevroman11/hackathon_2023)
+![GitHub forks](https://img.shields.io/github/forks/kurcevroman11/hackathon_2023)
+
 
 ### Для запуска приложения:
 
 ```
-make build && make run
+go run cmd/main.go
 ```
 
-Если приложение запускается впервые, необходимо применить миграции к базе данных:
 
-```
-make migrate
-```
