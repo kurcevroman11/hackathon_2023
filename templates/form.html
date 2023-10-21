@@ -9,7 +9,48 @@
     <div class="container mt-3">
         <input type="text" id="title" placeholder="Введите название статьи" class="form-control"><br>
         <input type="text" id="Subtitle" placeholder="Введите подзаголовок статьи" class="form-control"><br>
-        <input type="text" id="CreateAt" class="form-control md-2" placeholder="Введите подзаголовок статьи" value="" readonly>
+        <input type="text" id="CreateAt" class="form-control mb-3" placeholder="Введите подзаголовок статьи" value="" readonly>
+            <h3>Выбор темы</h3>
+        <label for="theme" class=" mb-3" >Выберите тему:</label>
+
+        <select id="theme" class="rounded border border-rounded-2">
+            <option value="255,255,255" class="rounded border border-rounded-2">Поумолчанию</option>
+            {{range $index, $item := . }}
+                <option value="{{$item.R}},{{$item.G}},{{$item.B}}" class="rounded border border-rounded-2">{{$item.Name}}</option>
+            {{end}}
+        </select>
+
+        <script>
+            const themeSelect = document.getElementById('theme');
+            const body = document.body;
+            const container = document.querySelector('.container');
+
+            themeSelect.addEventListener('change', function() {
+                const selectedTheme = themeSelect.value;
+                applyTheme(selectedTheme);
+            });
+
+            function applyTheme(theme) {
+                const selectedOption = themeSelect.querySelector(`[value="${theme}"]`);
+// Получить элемент с идентификатором "editor"
+                const editorElement = document.getElementById('editor');
+
+// Установить новый цвет фона (например, красный)
+
+                if (selectedOption) {
+                    // Разбиваем значение "value" на массив, разделяя его запятыми и преобразуя в числа
+                    const [r, g, b] = selectedOption.value.split(',').map(Number);
+
+                    editorElement.style.backgroundColor = `rgb(${r},${g},${b}, 0.6)`
+                } else {
+                    body.style.backgroundColor = 'white';
+                    body.style.color = 'black';
+                    container.style.backgroundColor = 'lightgray';
+                }
+            }
+        </script>
+
+
         <script>
             // Получить текущую дату
             var currentDate = new Date();
@@ -78,13 +119,23 @@
             // Получение содержимого редактора
             var content = quill.root.innerHTML;
             var titleInput = document.getElementById('title');
+            var Subtitle = document.getElementById('Subtitle');
+            var CreateAt = document.getElementById('CreateAt');
+            var theme = document.getElementById('theme');
 
 // Получение значения из элемента
+            var SubtitleValue = Subtitle.value;
+            var CreateAtValue = CreateAt.value;
+            var themeValue = theme.value;
             var titleValue = titleInput.value;
 
             console.log(titleValue)
+
             // Создание объекта для отправки данных
             var data = {
+                Subtitle: SubtitleValue,
+                CreateAt: CreateAtValue,
+                theme: themeValue,
                 title:titleValue,
                 content: content
             };

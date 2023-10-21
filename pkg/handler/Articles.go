@@ -3,7 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"github.com/alecthomas/template"
-	"github.com/go-chi/chi"
+	chi "github.com/go-chi/chi"
+	"github.com/gorilla/mux"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"io/ioutil"
 	"log"
@@ -115,7 +116,46 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Статья успешно создана и сохранена!"))
 }
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
+	// Чтение тела запроса
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Ошибка чтения тела запроса", http.StatusBadRequest)
+		return
+	}
 
+	// Декодирование JSON-данных в объект ArticleData
+	var articleData models.ArticleData
+	if err := json.Unmarshal(body, &articleData); err != nil {
+		http.Error(w, "Ошибка декодирования JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Получение ID статьи из URL-параметров
+	vars := mux.Vars(r)
+	articleID := vars["id"]
+
+	// Получение статьи из базы данных по ее ID
+	article, err := h.services.ArticleService.GetById(articleID)
+	if err != nil {
+		http.Error(w, "Статья не найдена", http.StatusNotFound)
+		return
+	}
+
+	// Обновление полей статьи на основе данных ArticleData
+	article.Title = articleData.Title
+	article.Content = articleData.Content
+	article.UpdatedAt = time.Now()
+
+	// Сохранение обновленной статьи в базе данных
+	article, err = h.services.ArticleService.Update(articleID, *article)
+	if err != nil {
+		http.Error(w, "Ошибка при обновлении статьи", http.StatusInternalServerError)
+		return
+	}
+
+	// Отправка ответа клиенту
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Статья успешно обновлена!"))
 }
 func (h *Handler) DeleteArticle(w http.ResponseWriter, r *http.Request) {
 
@@ -169,7 +209,28 @@ func (h *Handler) inputPage(w http.ResponseWriter, r *http.Request) {
 		log.Print("err :", err.Error())
 		return
 	}
-	tmpl.ExecuteTemplate(w, "index", nil)
+
+	thems := []models.Theme{{
+		Id:   1,
+		Name: "Темная тема",
+		R:    0,
+		G:    0,
+		B:    0,
+	}, {
+		Id:   1,
+		Name: "Красная",
+		R:    255,
+		G:    0,
+		B:    0,
+	},
+	}
+
+	if err != nil {
+		log.Print("err :", err.Error())
+		return
+	}
+
+	tmpl.ExecuteTemplate(w, "index", thems)
 }
 func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
