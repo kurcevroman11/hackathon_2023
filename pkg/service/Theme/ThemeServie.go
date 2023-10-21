@@ -28,10 +28,10 @@ func (t ThemeServiceImpl) FakeDate() (*models.Theme, error) {
 
 	theme := &models.Theme{
 		Id:   t.gen.GenerateUUID(),
-		Name: "По умолчанию",
-		R:    255,
-		G:    255,
-		B:    255,
+		Name: "Темная тема",
+		R:    10,
+		G:    0,
+		B:    20,
 	}
 	return t.rep.ThemeRepository.Create(theme)
 

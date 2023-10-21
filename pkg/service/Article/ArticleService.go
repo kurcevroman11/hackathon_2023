@@ -36,7 +36,18 @@ func (a ArticleService) Update(id string, article models.Article) (*models.Artic
 }
 
 func (a ArticleService) GetById(id string) (*models.Article, error) {
+	article, err := a.rep.ArticleRepository.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	thems, err := a.rep.ThemeRepository.GetById(article.ThemeId)
+	if err != nil {
+		return nil, err
+	}
+	article.Theme = *thems
 	return a.rep.ArticleRepository.GetById(id)
+
 }
 
 func (a ArticleService) GetAll() ([]*models.Article, error) {
@@ -54,15 +65,15 @@ func (a ArticleService) FakeData() (*models.Article, error) {
 		Content:         "Test_Title",
 		PublicationDate: "Test_Data",
 		AuthorID:        "",
-		Author: models.Author{
-			ID:        "test",
-			FirstName: "Tests",
-			LastName:  "Tests",
-			Email:     "Tests@mail.com",
-			CreateAt:  time.Time{},
-			UpdatedAt: time.Time{},
-			DeletedAt: nil,
-		},
+		//Author: models.Author{
+		//	ID:        "test",
+		//	FirstName: "Tests",
+		//	LastName:  "Tests",
+		//	Email:     "Tests@mail.com",
+		//	CreateAt:  time.Time{},
+		//	UpdatedAt: time.Time{},
+		//	DeletedAt: nil,
+		//},
 		CreateAt:  time.Time{},
 		UpdatedAt: time.Time{},
 		DeletedAt: nil,

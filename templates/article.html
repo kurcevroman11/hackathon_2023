@@ -4,8 +4,10 @@
 
 <body>
 {{template "header_for_articlePage" }}
+
+
 <main class="container">
-    <div class="card text-center mt-4">
+    <div class="card text-center mt-4"  id="container"backgroundColor="rgb({{.Article.Theme.R}}, {{.Article.Theme.G}},{{.Article.Theme.B}})">
         <div class="row">
             <div class="col-md-5">
                 <img src="https://fight.ru/wp-content/uploads/2022/07/999f412d50215fc11045a7cb420bc719-scaled.jpg" alt="" class="card-img-bottom">
