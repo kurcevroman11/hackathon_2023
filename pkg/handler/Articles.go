@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
@@ -109,6 +110,7 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 		if len(article.Content) > 900 {
 			article.Content = article.Content[:900] + "..."
 		}
+		article.Content = removeImagesFromContent(article.Content)
 	}
 
 	var urls []string
@@ -196,4 +198,23 @@ func Transliterate(input string) string {
 	}
 
 	return result
+}
+
+func removeImagesFromContent(content string) string {
+	// Создайте новый документ goquery
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(content))
+	if err != nil {
+		log.Println("Error creating goquery document:", err)
+		return content
+	}
+
+	// Найдите и удалите все теги <img>
+	doc.Find("img").Each(func(index int, element *goquery.Selection) {
+		element.Remove()
+	})
+
+	// Получите очищенный текстовый контент без изображений
+	cleanedContent, _ := doc.Html()
+
+	return cleanedContent
 }
