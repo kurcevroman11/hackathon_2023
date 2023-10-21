@@ -5,10 +5,11 @@ import (
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"time"
 	"strings"
+	"time"
 )
 
 // GetArticles @Summary Получить все статьи
