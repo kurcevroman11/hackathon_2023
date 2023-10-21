@@ -47,7 +47,7 @@ func NewPostgresDB(cfg Config, loggering bool) (*gorm.DB, error) {
 		err = dbSQL.Ping()
 		if err == nil {
 			log.Println("Соединение с базой данных установлено!")
-			db.AutoMigrate(models.Article{}, models.Author{}, models.Category{})
+			db.AutoMigrate(models.Article{}, models.Author{})
 			return db, nil
 		}
 
