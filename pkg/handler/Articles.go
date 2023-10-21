@@ -55,6 +55,9 @@ func (h *Handler) MainPaig(w http.ResponseWriter, r *http.Request) {
 
 	articles, err := h.services.ArticleService.GetAll()
 
+	for _, article := range articles {
+		h.services.ArticleService.GenerateQRCode(article)
+	}
 	data := struct {
 		Articles []*models.Article
 	}{

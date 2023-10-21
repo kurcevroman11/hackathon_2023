@@ -73,14 +73,17 @@ func (a ArticleService) FakeData() (*models.Article, error) {
 }
 
 func (a ArticleService) GenerateQRCode(desr *models.Article) error {
-
 	// Создаем QR-код из текста
 	valueForQr := fmt.Sprint("/")
 	png, err := qrcode.Encode(valueForQr, qrcode.Medium, 256)
 	if err != nil {
 		return err
 	}
+
 	encodedFile := base64.StdEncoding.EncodeToString(png)
-	desr.Image = encodedFile
+	dataURI := "data:image/png;base64," + encodedFile
+
+	// Сохраняем Data URI в модели статьи
+	desr.QRCode = dataURI
 	return nil
 }

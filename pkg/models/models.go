@@ -36,5 +36,6 @@ type Article struct {
 	UpdatedAt       time.Time  `json:"updated_at"`
 	Image           string
 	URL             string
+	QRCode          string
 	DeletedAt       *time.Time `json:"-"`
 }
