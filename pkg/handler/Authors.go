@@ -33,6 +33,13 @@ func (h *Handler) CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// GetAllAuthor @Summary Получить всех авторов
+// @Description Получение списка всех авторов
+// @Tags Articles
+// @Produce json
+// @Success 200 {array} models.Author
+// @Router /authors [get]
 func (h *Handler) GetAllAuthor(w http.ResponseWriter, r *http.Request) {
 
 	out, err := h.services.AuthorService.GetAll()
