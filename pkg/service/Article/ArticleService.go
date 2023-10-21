@@ -46,7 +46,7 @@ func (a ArticleService) GetById(id string) (*models.Article, error) {
 		return nil, err
 	}
 	article.Theme = *thems
-	return a.rep.ArticleRepository.GetById(id)
+	return article, err
 
 }
 
