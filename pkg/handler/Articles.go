@@ -2,8 +2,10 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
+	"github.com/gorilla/mux"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"io/ioutil"
 	"log"
@@ -91,10 +93,54 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Статья успешно создана и сохранена!"))
 }
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
+	// Чтение тела запроса
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Ошибка чтения тела запроса", http.StatusBadRequest)
+		return
+	}
 
+	// Декодирование JSON-данных в объект ArticleData
+	var articleData models.ArticleData
+	if err := json.Unmarshal(body, &articleData); err != nil {
+		http.Error(w, "Ошибка декодирования JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Получение ID статьи из URL-параметров
+	vars := mux.Vars(r)
+	articleID := vars["id"]
+
+	// Получение статьи из базы данных по ее ID
+	article, err := h.services.ArticleService.GetById(articleID)
+	if err != nil {
+		http.Error(w, "Статья не найдена", http.StatusNotFound)
+		return
+	}
+
+	// Обновление полей статьи на основе данных ArticleData
+	article.Title = articleData.Title
+	article.Content = articleData.Content
+	article.UpdatedAt = time.Now()
+
+	// Сохранение обновленной статьи в базе данных
+	article, err = h.services.ArticleService.Update(articleID, *article)
+	if err != nil {
+		http.Error(w, "Ошибка при обновлении статьи", http.StatusInternalServerError)
+		return
+	}
+
+	// Отправка ответа клиенту
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Статья успешно обновлена!"))
 }
 func (h *Handler) DeleteArticle(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	articleID := vars["articleID"]
 
+	// код для удаления статьи с идентификатором articleID из базы данных или другого хранилища данных
+
+	fmt.Fprintf(w, "Статья с идентификатором %s успешно удалена", articleID)
 }
 
 func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {

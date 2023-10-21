@@ -11,6 +11,7 @@ require (
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/spec v0.20.9 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible
+	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.1.1
 	github.com/magiconair/properties v1.8.2 // indirect
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
