@@ -62,7 +62,7 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 		log.Print("err :", err.Error())
 		return
 	}
-	h.services.ArticleService.GenerateQRCode(r.URL.String(), article)
+	h.services.ArticleService.GenerateQRCode("http://"+r.Host+r.URL.String(), article)
 
 	data := struct {
 		Article *models.Article
