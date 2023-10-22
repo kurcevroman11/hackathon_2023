@@ -1,22 +1,31 @@
 basePath: /
 definitions:
+  handler.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
   models.Article:
     properties:
-      author:
-        $ref: '#/definitions/models.Author'
       content:
         type: string
       created_at:
         type: string
       id:
         type: string
-      image:
-        type: string
+      imgFile:
+        $ref: '#/definitions/models.File'
+      public:
+        type: boolean
       publication_date:
         type: string
       qrcode:
         type: string
       subtitle:
+        type: string
+      theme:
+        $ref: '#/definitions/models.Theme'
+      themeId:
         type: string
       title:
         type: string
@@ -25,24 +34,43 @@ definitions:
     type: object
   models.ArticleData:
     properties:
+      Theme:
+        type: string
       content:
+        type: string
+      createAt:
+        type: string
+      image:
+        items:
+          type: integer
+        type: array
+      subtitle:
         type: string
       title:
         type: string
     type: object
-  models.Author:
+  models.File:
     properties:
       created_at:
         type: string
-      email:
+      id:
         type: string
-      first_name:
+      name:
+        type: string
+      path:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Theme:
+    properties:
+      color:
         type: string
       id:
         type: string
-      last_name:
+      image:
         type: string
-      updated_at:
+      name:
         type: string
     type: object
 host: localhost:8000
@@ -52,36 +80,6 @@ info:
   title: Todo App API
   version: "1.0"
 paths:
-  /api/v1/authors:
-    post:
-      consumes:
-      - application/json
-      description: Эндпоинт для создания нового автора.
-      parameters:
-      - description: Данные автора
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/models.Author'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Успешное создание автора
-          schema:
-            $ref: '#/definitions/models.Author'
-        "400":
-          description: Ошибка при парсинге JSON
-          schema:
-            type: string
-        "500":
-          description: Ошибка при создании автора
-          schema:
-            type: string
-      summary: Создание автора
-      tags:
-      - Авторы
   /articles:
     get:
       description: Получение списка всех статей
@@ -147,4 +145,40 @@ paths:
       summary: Получение статьи по ID
       tags:
       - Статьи
+  /theme/:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Theme'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Retrieve all themes
+  /theme/{ID}:
+    get:
+      parameters:
+      - description: Theme ID
+        in: path
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Theme'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Retrieve a theme by ID
 swagger: "2.0"

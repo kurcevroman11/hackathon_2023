@@ -15,52 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/authors": {
-            "post": {
-                "description": "Эндпоинт для создания нового автора.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Авторы"
-                ],
-                "summary": "Создание автора",
-                "parameters": [
-                    {
-                        "description": "Данные автора",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Author"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Успешное создание автора",
-                        "schema": {
-                            "$ref": "#/definitions/models.Author"
-                        }
-                    },
-                    "400": {
-                        "description": "Ошибка при парсинге JSON",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Ошибка при создании автора",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/articles": {
             "get": {
                 "description": "Получение списка всех статей",
@@ -160,15 +114,76 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/theme/": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieve all themes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Theme"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/theme/{ID}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieve a theme by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Theme ID",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Theme"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "handler.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Article": {
             "type": "object",
             "properties": {
-                "author": {
-                    "$ref": "#/definitions/models.Author"
-                },
                 "content": {
                     "type": "string"
                 },
@@ -178,8 +193,11 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "image": {
-                    "type": "string"
+                "imgFile": {
+                    "$ref": "#/definitions/models.File"
+                },
+                "public": {
+                    "type": "boolean"
                 },
                 "publication_date": {
                     "type": "string"
@@ -188,6 +206,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "subtitle": {
+                    "type": "string"
+                },
+                "theme": {
+                    "$ref": "#/definitions/models.Theme"
+                },
+                "themeId": {
                     "type": "string"
                 },
                 "title": {
@@ -201,7 +225,22 @@ const docTemplate = `{
         "models.ArticleData": {
             "type": "object",
             "properties": {
+                "Theme": {
+                    "type": "string"
+                },
                 "content": {
+                    "type": "string"
+                },
+                "createAt": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "subtitle": {
                     "type": "string"
                 },
                 "title": {
@@ -209,25 +248,39 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Author": {
+        "models.File": {
             "type": "object",
             "properties": {
                 "created_at": {
                     "type": "string"
                 },
-                "email": {
+                "id": {
                     "type": "string"
                 },
-                "first_name": {
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Theme": {
+            "type": "object",
+            "properties": {
+                "color": {
                     "type": "string"
                 },
                 "id": {
                     "type": "string"
                 },
-                "last_name": {
+                "image": {
                     "type": "string"
                 },
-                "updated_at": {
+                "name": {
                     "type": "string"
                 }
             }

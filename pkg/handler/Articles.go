@@ -6,9 +6,11 @@ import (
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // GetArticles @Summary Получить все статьи
@@ -144,7 +146,8 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	}
 	// Отправить ответ клиенту
 	w.WriteHeader(http.StatusCreated)
-	w.Write(jsonData)}
+	w.Write(jsonData)
+}
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	// Чтение тела запроса
 	body, err := ioutil.ReadAll(r.Body)
