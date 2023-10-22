@@ -113,3 +113,9 @@ svg.intro.go .text-stroke:nth-child(6) {
     position: relative;
     top: -2px;
 }
+
+.modal-container {
+    display: flex;
+    justify-content: center; /* Центрирование по горизонтали */
+    height: 100vh; /* Заполняет высоту видимой области */
+}
