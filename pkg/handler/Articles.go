@@ -6,9 +6,11 @@ import (
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // GetArticles @Summary Получить все статьи
@@ -35,6 +37,18 @@ func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Отправляем JSON-данные в ответе
 	w.Write(jsonData)
 }
+
+// GetArticleByID is a handler function that retrieves an article by its ID.
+//
+// @Summary Получение статьи по ID
+// @Description Эндпоинт для получения статьи по указанному ID.
+// @Tags Статьи
+// @Accept  json
+// @Produce  json
+// @Param ID path string true "ID статьи"
+// @Success 200 {object} models.Article
+// @Failure 404 {string} string "Статья не найдена"
+// @Router /articles/{ID} [get]
 func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("templates/article.html", "templates/head.html", "templates/header_for_articlePage.html", "templates/footer.html")
 	if err != nil {
@@ -58,6 +72,18 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.ExecuteTemplate(w, "articles", data)
 }
+
+// CreateArticle is a handler function that creates a new article.
+//
+// @Summary Создание статьи
+// @Description Эндпоинт для создания новой статьи.
+// @Tags Статьи
+// @Accept json
+// @Produce plain
+// @Param body body models.ArticleData true "Данные статьи"
+// @Success 201 {string} string "Статья успешно создана и сохранена!"
+// @Failure 400 {string} string "Ошибка чтения тела запроса | Ошибка декодирования JSON"
+// @Router /articles/ [post]
 func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	article := models.Article{}
 
@@ -120,9 +146,48 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	}
 	// Отправить ответ клиенту
 	w.WriteHeader(http.StatusCreated)
-	w.Write(jsonData)}
+	w.Write(jsonData)
+}
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
+	// Чтение тела запроса
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Ошибка чтения тела запроса", http.StatusBadRequest)
+		return
+	}
 
+	// Декодирование JSON-данных в объект ArticleData
+	var articleData models.ArticleData
+	if err := json.Unmarshal(body, &articleData); err != nil {
+		http.Error(w, "Ошибка декодирования JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Получение ID статьи из URL-параметров
+	articleID := chi.URLParam(r, "authors")
+
+	// Получение статьи из базы данных по ее ID
+	article, err := h.services.ArticleService.GetById(articleID)
+	if err != nil {
+		http.Error(w, "Статья не найдена", http.StatusNotFound)
+		return
+	}
+
+	// Обновление полей статьи на основе данных ArticleData
+	article.Title = articleData.Title
+	article.Content = articleData.Content
+	article.UpdatedAt = time.Now()
+
+	// Сохранение обновленной статьи в базе данных
+	article, err = h.services.ArticleService.Update(articleID, *article)
+	if err != nil {
+		http.Error(w, "Ошибка при обновлении статьи", http.StatusInternalServerError)
+		return
+	}
+
+	// Отправка ответа клиенту
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Статья успешно обновлена!"))
 }
 func (h *Handler) DeleteArticle(w http.ResponseWriter, r *http.Request) {
 

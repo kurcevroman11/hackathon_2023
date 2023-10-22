@@ -30,21 +30,154 @@
                     }
                 }
             }
+        },
+        "/articles/": {
+            "post": {
+                "description": "Эндпоинт для создания новой статьи.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "text/plain"
+                ],
+                "tags": [
+                    "Статьи"
+                ],
+                "summary": "Создание статьи",
+                "parameters": [
+                    {
+                        "description": "Данные статьи",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ArticleData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Статья успешно создана и сохранена!",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Ошибка чтения тела запроса | Ошибка декодирования JSON",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/articles/{ID}": {
+            "get": {
+                "description": "Эндпоинт для получения статьи по указанному ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Статьи"
+                ],
+                "summary": "Получение статьи по ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID статьи",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Article"
+                        }
+                    },
+                    "404": {
+                        "description": "Статья не найдена",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/theme/": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieve all themes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Theme"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/theme/{ID}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Retrieve a theme by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Theme ID",
+                        "name": "ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Theme"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "handler.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Article": {
             "type": "object",
             "properties": {
-                "author": {
-                    "$ref": "#/definitions/models.Author"
-                },
-                "categories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Category"
-                    }
-                },
                 "content": {
                     "type": "string"
                 },
@@ -54,7 +187,25 @@
                 "id": {
                     "type": "string"
                 },
+                "imgFile": {
+                    "$ref": "#/definitions/models.File"
+                },
+                "public": {
+                    "type": "boolean"
+                },
                 "publication_date": {
+                    "type": "string"
+                },
+                "qrcode": {
+                    "type": "string"
+                },
+                "subtitle": {
+                    "type": "string"
+                },
+                "theme": {
+                    "$ref": "#/definitions/models.Theme"
+                },
+                "themeId": {
                     "type": "string"
                 },
                 "title": {
@@ -65,30 +216,33 @@
                 }
             }
         },
-        "models.Author": {
+        "models.ArticleData": {
             "type": "object",
             "properties": {
-                "created_at": {
+                "Theme": {
                     "type": "string"
                 },
-                "email": {
+                "content": {
                     "type": "string"
                 },
-                "first_name": {
+                "createAt": {
                     "type": "string"
                 },
-                "id": {
+                "image": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "subtitle": {
                     "type": "string"
                 },
-                "last_name": {
-                    "type": "string"
-                },
-                "updated_at": {
+                "title": {
                     "type": "string"
                 }
             }
         },
-        "models.Category": {
+        "models.File": {
             "type": "object",
             "properties": {
                 "created_at": {
@@ -100,17 +254,30 @@
                 "name": {
                     "type": "string"
                 },
+                "path": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "string"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "ApiKeyAuth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
+        },
+        "models.Theme": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
         }
     }
 }

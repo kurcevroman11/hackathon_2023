@@ -1,42 +1,55 @@
 basePath: /
 definitions:
+  handler.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
   models.Article:
     properties:
-      author:
-        $ref: '#/definitions/models.Author'
-      categories:
-        items:
-          $ref: '#/definitions/models.Category'
-        type: array
       content:
         type: string
       created_at:
         type: string
       id:
         type: string
+      imgFile:
+        $ref: '#/definitions/models.File'
+      public:
+        type: boolean
       publication_date:
+        type: string
+      qrcode:
+        type: string
+      subtitle:
+        type: string
+      theme:
+        $ref: '#/definitions/models.Theme'
+      themeId:
         type: string
       title:
         type: string
       updated_at:
         type: string
     type: object
-  models.Author:
+  models.ArticleData:
     properties:
-      created_at:
+      Theme:
         type: string
-      email:
+      content:
         type: string
-      first_name:
+      createAt:
         type: string
-      id:
+      image:
+        items:
+          type: integer
+        type: array
+      subtitle:
         type: string
-      last_name:
-        type: string
-      updated_at:
+      title:
         type: string
     type: object
-  models.Category:
+  models.File:
     properties:
       created_at:
         type: string
@@ -44,7 +57,20 @@ definitions:
         type: string
       name:
         type: string
+      path:
+        type: string
       updated_at:
+        type: string
+    type: object
+  models.Theme:
+    properties:
+      color:
+        type: string
+      id:
+        type: string
+      image:
+        type: string
+      name:
         type: string
     type: object
 host: localhost:8000
@@ -68,9 +94,91 @@ paths:
             type: array
       tags:
       - Articles
-securityDefinitions:
-  ApiKeyAuth:
-    in: header
-    name: Authorization
-    type: apiKey
+  /articles/:
+    post:
+      consumes:
+      - application/json
+      description: Эндпоинт для создания новой статьи.
+      parameters:
+      - description: Данные статьи
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.ArticleData'
+      produces:
+      - text/plain
+      responses:
+        "201":
+          description: Статья успешно создана и сохранена!
+          schema:
+            type: string
+        "400":
+          description: Ошибка чтения тела запроса | Ошибка декодирования JSON
+          schema:
+            type: string
+      summary: Создание статьи
+      tags:
+      - Статьи
+  /articles/{ID}:
+    get:
+      consumes:
+      - application/json
+      description: Эндпоинт для получения статьи по указанному ID.
+      parameters:
+      - description: ID статьи
+        in: path
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Article'
+        "404":
+          description: Статья не найдена
+          schema:
+            type: string
+      summary: Получение статьи по ID
+      tags:
+      - Статьи
+  /theme/:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Theme'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Retrieve all themes
+  /theme/{ID}:
+    get:
+      parameters:
+      - description: Theme ID
+        in: path
+        name: ID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Theme'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Retrieve a theme by ID
 swagger: "2.0"
