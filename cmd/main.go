@@ -48,7 +48,10 @@ func main() {
 	gen := tools.NewGen()
 	repos := repository.NewRepository(db, db.Logger)
 	services := service.NewService(repos, &gen, db.Logger)
-	services.ArticleService.FakeData()
+
+	//services.ArticleService.FakeData()
+	//services.ThemeService.FakeDate()
+
 	handlers := handler.NewHandler(services)
 
 	srv := new(todo.Server)

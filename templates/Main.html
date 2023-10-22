@@ -11,13 +11,13 @@
     <div class="card text-center mt-4">
       <div class="row">
         <div class="col-md-5">
-          <img src="https://fight.ru/wp-content/uploads/2022/07/999f412d50215fc11045a7cb420bc719-scaled.jpg" alt="" class="card-img-bottom">
+          <img src="{{ .ImgFile.Path }}" alt="" class="rounded-start card-img-bottom">
         </div>
         <div class="col-md-7">
           <div class="card-body text-start">
             <h5 class="card-title ">{{ .Title }}</h5>
-            <p class="card-text fst-italic">{{ .CreateAt.UTC.Format "2006-01-02 15:04:05"  }}</p>
-            <p class="card-text">{{ .Content }}</p>
+            <p class="card-text fst-italic">{{ .PublicationDate  }}</p>
+            <p class="card-text">{{ .Subtitle }}</p>
             <a href="articles/{{index $.Urls $index}}" class="btn btn-primary">Read article</a>
           </div>
         </div>
@@ -51,31 +51,6 @@
       </svg>
     </div>
   </main>
-
-
-    <script>
-    const themeSelect = document.getElementById('theme');
-
-    themeSelect.addEventListener('change', function() {
-      const selectedTheme = themeSelect.value;
-      applyTheme(selectedTheme);
-    });
-
-    function applyTheme(theme) {
-      const body = document.body;
-      const container = document.querySelector('.container');
-
-      if (theme === 'dark') {
-        body.style.backgroundColor = 'black';
-        body.style.color = 'white';
-        container.style.backgroundColor = 'darkgray';
-      } else {
-        body.style.backgroundColor = 'white';
-        body.style.color = 'black';
-        container.style.backgroundColor = 'lightgray';
-      }
-    }
-  </script>
 
   {{template "footer" }}
   {{end}}

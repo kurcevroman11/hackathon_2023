@@ -15,6 +15,19 @@
   background-color: rgba(19, 164, 77, 0.8);
 }
 
+
+.theme-light {
+  background-image: url('https://static12.tgcnt.ru/posts/_0/5a/5a2ad7c599770f91b6e284c08201b494.jpg');
+  color: #000; /* цвет текста */
+}
+
+/* Тема "Темная" */
+.theme-dark {
+  background-image: url('https://catherineasquithgallery.com/uploads/posts/2021-03/1614840031_172-p-fon-dlya-shkolnogo-saita-250.jpg');
+  color: #fff; /* цвет текста */
+}
+
+
 /*
  * Base structure
  */

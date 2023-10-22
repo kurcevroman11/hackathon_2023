@@ -28,6 +28,7 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	))
 
 	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	router.Handle("/img/*", http.StripPrefix("/img/", http.FileServer(http.Dir("img"))))
 
 	// Создание группы маршрутов для статей
 	router.Route("/articles", func(r chi.Router) {
@@ -37,14 +38,12 @@ func (h *Handler) InitRoutes() *chi.Mux {
 		r.Put("/{articleID}", h.UpdateArticle)
 		r.Delete("/{articleID}", h.DeleteArticle)
 	})
-
-	// Создание группы маршрутов для статей
-	router.Route("/authors", func(r chi.Router) {
-		r.Get("/", h.GetAllAuthor)
-		r.Get("/{authorID}", h.GetByIdAuthor)
-		r.Post("/", h.CreateAuthor)
-		r.Put("/{authors}", h.UpdateAuthor)
-		r.Delete("/{authorID}", h.DeleteAuthor)
+	router.Route("/theme", func(r chi.Router) {
+		r.Get("/", h.GetTheme)
+		r.Get("/{ID}", h.GetThemeByID)
+		r.Post("/", h.CreateTheme)
+		r.Put("/{themeID}", h.UpdateTheme)
+		r.Delete("/{themeID}", h.DeleteTheme)
 	})
 	return router
 }

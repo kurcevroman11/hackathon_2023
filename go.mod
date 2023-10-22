@@ -3,6 +3,7 @@ module github.com/zhashkevych/todo-app
 go 1.14
 
 require (
+	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/bytedance/sonic v1.10.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.3 // indirect

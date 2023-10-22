@@ -6,10 +6,11 @@ import (
 
 type ArticleData struct {
 	Title    string `json:"title"`
+	Subtitle string `json:"subtitle"`
+	CreateAt string `json:"createAt"`
 	Content  string `json:"content"`
-	Subtitle string `json:"content"`
-	CreateAt string `json:"content"`
-	theme    string `json:"content"`
+	Image    []byte `json:"image"`
+	Theme    string `json:"Theme"`
 }
 
 type Author struct {
@@ -17,6 +18,16 @@ type Author struct {
 	FirstName string     `json:"first_name"`
 	LastName  string     `json:"last_name"`
 	Email     string     `json:"email"`
+	Public    bool       `json:"public"`
+	CreateAt  time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"-"`
+}
+
+type File struct {
+	Id        string
+	Name      string
+	Path      string
 	CreateAt  time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `json:"-"`
@@ -24,26 +35,29 @@ type Author struct {
 
 // Article модель статьи
 type Article struct {
-	ID              string `gorm:"primary_key" json:"id"`
-	Title           string `json:"title"`
-	Subtitle        string `json:"subtitle"`
-	Content         string `json:"content"`
-	PublicationDate string `json:"publication_date"`
-	ThemeId         int
-	Theme           Theme     `json:"theme" gorm:"foreignKey:ThemeId;preload:true"`
-	AuthorID        string    `json:"-"`
-	Author          Author    `json:"author" gorm:"foreignKey:AuthorID;preload:true"`
+	ID              string    `gorm:"primary_key" json:"id"`
+	Title           string    `json:"title"`
+	Subtitle        string    `json:"subtitle"`
+	Content         string    `json:"content"`
+	PublicationDate string    `json:"publication_date"`
+	ThemeId         string
+	Theme           Theme  `json:"theme" gorm:"foreignKey:ThemeId;preload:true"`
+	Public          bool      `json:"public"`
 	CreateAt        time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
-	Image           string
+	FileId          string    `json:"-"`
+	ImgFile         File      `json:"imgFile" gorm:"foreignKey:FileId;preload:true"`
 	QRCode          string
 	DeletedAt       *time.Time `json:"-"`
 }
 
+type FilterArticle struct {
+	Public bool
+}
+
 type Theme struct {
-	Id   int
-	Name string
-	R    int
-	G    int
-	B    int
+	Id    string `json:"id"`
+	Name  string `json:"name"`
+	Color string `json:"color"`
+	Image string `json:"image"`
 }

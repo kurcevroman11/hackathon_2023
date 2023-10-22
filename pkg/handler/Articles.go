@@ -2,14 +2,13 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
-	"time"
 )
 
 // GetArticles @Summary Получить все статьи
@@ -20,7 +19,7 @@ import (
 // @Router /articles [get]
 func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Создание экземпляра структуры
-	data, err := h.services.ArticleService.GetAll()
+	data, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: false})
 
 	// Преобразование структуры в JSON
 	jsonData, err := json.Marshal(data)
@@ -55,6 +54,7 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	articleId := chi.URLParam(r, "ID")
+
 	article, err := h.services.ArticleService.GetById(articleId)
 	if err != nil {
 		log.Print("err :", err.Error())
@@ -83,37 +83,68 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 // @Failure 400 {string} string "Ошибка чтения тела запроса | Ошибка декодирования JSON"
 // @Router /articles/ [post]
 func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	article := models.Article{}
+
+	title := r.FormValue("title")
+	article.Title = title
+	subtitle := r.FormValue("subtitle")
+	article.Subtitle = subtitle
+	createAt := r.FormValue("createAt")
+	article.PublicationDate = createAt
+	content := r.FormValue("content")
+	article.Content = content
+	theme := r.FormValue("theme")
+	article.ThemeId = theme
+	public := r.FormValue("public")
+	if public == "true" {
+		article.Public = true
+	} else {
+		article.Public = false
+	}
+
+	file, err := h.services.ArticleService.GetImage(r)
+	article.ImgFile = *file
 	if err != nil {
-		http.Error(w, "Ошибка чтения тела запроса", http.StatusBadRequest)
+		http.Error(w, "Ошибка при копировании файла", http.StatusInternalServerError)
+		return
+	}
+	create, err := h.services.ArticleService.Create(&article)
+	if err != nil {
 		return
 	}
 
-	var articleData models.ArticleData
-	if err := json.Unmarshal(body, &articleData); err != nil {
-		http.Error(w, "Ошибка декодирования JSON", http.StatusBadRequest)
+	titleURL := strings.ReplaceAll(strings.ToLower(article.Title), " ", "-")
+	titleURL = Transliterate(titleURL)
+
+	// Форматирование даты публикации в строку "2006-01-02"
+	dateStr := article.CreateAt.Format("2006-01-02")
+
+	// Конкатенация заголовка и даты для создания URL
+	articleURL := "http://" + r.Host + "/articles/" + article.ID + "/" + titleURL + "-" + dateStr
+
+	err = h.services.ArticleService.GenerateQRCode(articleURL, create)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	// Создание объекта Article на основе данных ArticleData
-	article := models.Article{
-		Title:           articleData.Title,
-		Content:         articleData.Content,
-		PublicationDate: time.Now().String(),
-		AuthorID:        "test",
-		Author:          models.Author{},
-		CreateAt:        time.Now(),
-		UpdatedAt:       time.Now(),
-		Image:           "",
-		QRCode:          "",
-		DeletedAt:       nil,
+	data := struct {
+		Article *models.Article
+		Url     string
+	}{
+		Article: create,
+		Url:     articleURL,
 	}
 
-	h.services.ArticleService.Create(&article)
+	jsonData, err := json.Marshal(data)
+
+	if err != nil {
+		// Обработка ошибки
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	// Отправить ответ клиенту
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Статья успешно создана и сохранена!"))
-}
+	w.Write(jsonData)}
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 	// Чтение тела запроса
 	body, err := ioutil.ReadAll(r.Body)
@@ -167,12 +198,13 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	articles, err := h.services.ArticleService.GetAll()
+	articles, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: true})
 
 	for _, article := range articles {
-		if len(article.Content) > 900 {
-			article.Content = article.Content[:900] + "..."
+		if len(article.Content) > 300 {
+			article.Content = article.Content[:300] + "..."
 		}
+		article.Content = removeImagesFromContent(article.Content)
 	}
 
 	var urls []string
@@ -180,6 +212,7 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 	for _, article := range articles {
 
 		titleURL := strings.ReplaceAll(strings.ToLower(article.Title), " ", "-")
+		titleURL = strings.Replace(titleURL, "/", "", -1)
 		titleURL = Transliterate(titleURL)
 
 		// Форматирование даты публикации в строку "2006-01-02"
@@ -208,21 +241,7 @@ func (h *Handler) inputPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	thems := []models.Theme{{
-		Id:   1,
-		Name: "Темная тема",
-		R:    0,
-		G:    0,
-		B:    0,
-	}, {
-		Id:   1,
-		Name: "Красная",
-		R:    255,
-		G:    0,
-		B:    0,
-	},
-	}
-
+	thems, err := h.services.ThemeService.GetAll()
 	if err != nil {
 		log.Print("err :", err.Error())
 		return
@@ -230,12 +249,55 @@ func (h *Handler) inputPage(w http.ResponseWriter, r *http.Request) {
 
 	tmpl.ExecuteTemplate(w, "index", thems)
 }
+
+func (h *Handler) getQR(w http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	article, err := h.services.ArticleService.GetById(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	titleURL := strings.ReplaceAll(strings.ToLower(article.Title), " ", "-")
+	titleURL = Transliterate(titleURL)
+
+	// Форматирование даты публикации в строку "2006-01-02"
+	dateStr := article.CreateAt.Format("2006-01-02")
+
+	host := r.URL.Host + r.URL.Port()
+	// Конкатенация заголовка и даты для создания URL
+	articleURL := host + "/" + article.ID + "/" + titleURL + "-" + dateStr
+
+	err = h.services.ArticleService.GenerateQRCode(articleURL, article)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data := struct {
+		QRCode string
+		Url    string
+	}{
+		QRCode: article.QRCode,
+		Url:    articleURL,
+	}
+
+	result, err := json.Marshal(data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Write(result)
+}
+
 func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	content := r.FormValue("editor")
 
 	dest := models.Article{
-		Title: title, Content: content, AuthorID: "test"}
+		Title: title, Content: content}
 
 	if title == "" || content == "" {
 		http.Error(w, "Title and content cannot be empty", http.StatusBadRequest)
@@ -247,7 +309,7 @@ func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/svg+xml")
 
 	// Вывод в буфере
-	w.Write([]byte(dest.Image))
+	w.Write([]byte(dest.Title))
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -277,4 +339,23 @@ func Transliterate(input string) string {
 	}
 
 	return result
+}
+
+func removeImagesFromContent(content string) string {
+	// Создайте новый документ goquery
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(content))
+	if err != nil {
+		log.Println("Error creating goquery document:", err)
+		return content
+	}
+
+	// Найдите и удалите все теги <img>
+	doc.Find("img").Each(func(index int, element *goquery.Selection) {
+		element.Remove()
+	})
+
+	// Получите очищенный текстовый контент без изображений
+	cleanedContent, _ := doc.Html()
+
+	return cleanedContent
 }
