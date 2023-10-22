@@ -51,8 +51,9 @@
                                     image: data.image,
                                 };
                                 console.log(selectedTheme)
+                            editor =  document.getElementById("editor")
+                            editor.style.backgroundColor = selectedTheme.color                        });
 
-                        });
                     } else {
                         console.error('Ошибка при отправке запроса на сервер:', response.statusText);
                         return null;
@@ -104,7 +105,7 @@
             titleInput = document.getElementById("title")
             subtitleInput = document.getElementById("subtitle")
             createAtInput = document.getElementById("createAt")
-            editorContent = document.getElementById("editor")
+            editorContent = quill.root.innerHTML;
 
             if (titleInput.value.trim() === '' || subtitleInput.value.trim() === '' || createAtInput.value.trim() === '' || editorContent.trim() === '') {
                 alert('Пожалуйста, заполните все поля.');
@@ -125,9 +126,9 @@
             // Получение содержимого редактора
             var content = quill.root.innerHTML;
             var titleInput = document.getElementById('title');
-            var Subtitle = document.getElementById('Subtitle');
-            var CreateAt = document.getElementById('CreateAt');
-            var theme = selectedTheme;
+            var Subtitle = document.getElementById('subtitle');
+            var CreateAt = document.getElementById('createAt');
+            var theme = selectedTheme.id;
 
 // Получение значения из элемента
             var SubtitleValue = Subtitle.value;
