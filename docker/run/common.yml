@@ -5,10 +5,10 @@ services:
       context: ../..
       dockerfile: Docker/run/Dockerfile
     environment:
-      - DB_URL=jdbc:postgresql://sectiondb:5432/section
-      - PORT=8080
+      - DB_URL=jdbc:postgresql://db:5432/section
+      - PORT=8000
 
-  sectiondb:
+  db:
     image: postgres:10.5-alpine
     environment:
       - POSTGRES_USER=section
@@ -16,14 +16,6 @@ services:
       - POSTGRES_DB=section
     volumes:
       - service_section_pg_data:/var/lib/postgresql/data
-
-  altair:
-    extends:
-      file: ../../../../../fanzila/service-section/docker/test_env/docker-compose.yml
-      service: altair
-    environment:
-      - SERVER_URL=http://localhost:8080/graphql
-      - AUTH_TOKEN=placeTokenHere
 
 volumes:
   service_loyalty_pg_data:

@@ -13,17 +13,6 @@ type ArticleData struct {
 	Theme    string `json:"Theme"`
 }
 
-type Author struct {
-	ID        string     `gorm:"primary_key" json:"id"`
-	FirstName string     `json:"first_name"`
-	LastName  string     `json:"last_name"`
-	Email     string     `json:"email"`
-	Public    bool       `json:"public"`
-	CreateAt  time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `json:"-"`
-}
-
 type File struct {
 	Id        string
 	Name      string
@@ -35,13 +24,13 @@ type File struct {
 
 // Article модель статьи
 type Article struct {
-	ID              string    `gorm:"primary_key" json:"id"`
-	Title           string    `json:"title"`
-	Subtitle        string    `json:"subtitle"`
-	Content         string    `json:"content"`
-	PublicationDate string    `json:"publication_date"`
+	ID              string `gorm:"primary_key" json:"id"`
+	Title           string `json:"title"`
+	Subtitle        string `json:"subtitle"`
+	Content         string `json:"content"`
+	PublicationDate string `json:"publication_date"`
 	ThemeId         string
-	Theme           Theme  `json:"theme" gorm:"foreignKey:ThemeId;preload:true"`
+	Theme           Theme     `json:"theme" gorm:"foreignKey:ThemeId;preload:true"`
 	Public          bool      `json:"public"`
 	CreateAt        time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`

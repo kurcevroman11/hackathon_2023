@@ -50,8 +50,8 @@ func main() {
 	repos := repository.NewRepository(db, db.Logger)
 	services := service.NewService(repos, &gen, db.Logger)
 
-	//services.ArticleService.FakeData()
-	//services.ThemeService.FakeDate()
+	services.ArticleService.FakeData()
+	services.ThemeService.FakeDate()
 
 	handlers := handler.NewHandler(services)
 
