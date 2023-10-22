@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"github.com/alecthomas/template"
-	chi "github.com/go-chi/chi"
+	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
 	"io/ioutil"
 	"log"
@@ -20,7 +20,7 @@ import (
 // @Router /articles [get]
 func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Создание экземпляра структуры
-	data, err := h.services.ArticleService.GetAll()
+	data, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: false})
 
 	// Преобразование структуры в JSON
 	jsonData, err := json.Marshal(data)
@@ -59,36 +59,31 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "articles", data)
 }
 func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	article := models.Article{}
+
+	title := r.FormValue("title")
+	article.Title = title
+	subtitle := r.FormValue("subtitle")
+	article.Subtitle = subtitle
+	createAt := r.FormValue("createAt")
+	article.PublicationDate = createAt
+	content := r.FormValue("content")
+	article.Content = content
+	public := r.FormValue("public")
+	if public == "true" {
+		article.Public = true
+	} else {
+		article.Public = false
+	}
+
+	file, err := h.services.ArticleService.GetImage(r)
+	article.ImgFile = *file
 	if err != nil {
-		http.Error(w, "Ошибка чтения тела запроса", http.StatusBadRequest)
+		http.Error(w, "Ошибка при копировании файла", http.StatusInternalServerError)
 		return
 	}
-
-	var articleData models.ArticleData
-	if err := json.Unmarshal(body, &articleData); err != nil {
-		http.Error(w, "Ошибка декодирования JSON", http.StatusBadRequest)
-		return
-	}
-
-	// Создание объекта Article на основе данных ArticleData
-	article := models.Article{
-
-		Title:           articleData.Title,
-		Content:         articleData.Content,
-		Subtitle:        articleData.Subtitle,
-		PublicationDate: articleData.CreateAt,
-		ThemeId:         articleData.Theme,
-		AuthorID:        "Test",
-		//Author:          models.Author{ID: "Test", FirstName: "Test"},
-		CreateAt:  time.Now(),
-		UpdatedAt: time.Now(),
-		Image:     "",
-		QRCode:    "",
-		DeletedAt: nil,
-	}
-
 	h.services.ArticleService.Create(&article)
+
 	// Отправить ответ клиенту
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("Статья успешно создана и сохранена!"))
@@ -108,12 +103,13 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	articles, err := h.services.ArticleService.GetAll()
+	articles, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: true})
 
 	for _, article := range articles {
 		if len(article.Content) > 300 {
 			article.Content = article.Content[:300] + "..."
 		}
+		article.Content = removeImagesFromContent(article.Content)
 	}
 
 	var urls []string
@@ -121,6 +117,7 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 	for _, article := range articles {
 
 		titleURL := strings.ReplaceAll(strings.ToLower(article.Title), " ", "-")
+		titleURL = strings.Replace(titleURL, "/", "", -1)
 		titleURL = Transliterate(titleURL)
 
 		// Форматирование даты публикации в строку "2006-01-02"
@@ -175,7 +172,7 @@ func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/svg+xml")
 
 	// Вывод в буфере
-	w.Write([]byte(dest.Image))
+	w.Write([]byte(dest.Title))
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
@@ -205,4 +202,23 @@ func Transliterate(input string) string {
 	}
 
 	return result
+}
+
+func removeImagesFromContent(content string) string {
+	// Создайте новый документ goquery
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(content))
+	if err != nil {
+		log.Println("Error creating goquery document:", err)
+		return content
+	}
+
+	// Найдите и удалите все теги <img>
+	doc.Find("img").Each(func(index int, element *goquery.Selection) {
+		element.Remove()
+	})
+
+	// Получите очищенный текстовый контент без изображений
+	cleanedContent, _ := doc.Html()
+
+	return cleanedContent
 }

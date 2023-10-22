@@ -6,19 +6,19 @@
   {{template "header" }}
 
 
-  <main class="container  bck">
+  <main class="container">
     {{ range $index, $article := .Articles }}
-    <div class="card text-center mt-4 border-2 border border-primary ">
+    <div class="card text-center mt-4">
       <div class="row">
         <div class="col-md-5">
-          <img src="https://fight.ru/wp-content/uploads/2022/07/999f412d50215fc11045a7cb420bc719-scaled.jpg" alt="" class="card-img-bottom">
+          <img src="{{ $article.ImgFile.Path }}" alt="" class="rounded-start card-img-bottom">
         </div>
         <div class="col-md-7">
           <div class="card-body text-start">
-            <h1 class="card-title ">{{ .Title }}</h1>
-            <p class="card-text fst-italic">{{ .CreateAt.UTC.Format "2006-01-02 15:04:05"  }}</p>
-            <h3 class="card-text">{{ .Subtitle }}</h3>
-            <a href="articles/{{index $.Urls $index}}" class="btn btn-primary mt-3">Read article</a>
+            <h5 class="card-title ">{{ .Title }}</h5>
+            <p class="card-text fst-italic">{{ .PublicationDate  }}</p>
+            <p class="card-text">{{ .Subtitle }}</p>
+            <a href="articles/{{index $.Urls $index}}" class="btn btn-primary">Read article</a>
           </div>
         </div>
       </div>
@@ -51,6 +51,7 @@
       </svg>
     </div>
   </main>
+
   {{template "footer" }}
   {{end}}
 

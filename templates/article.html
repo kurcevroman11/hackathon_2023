@@ -4,19 +4,20 @@
 
 <body>
 {{template "header_for_articlePage" }}
-
-
-<main class="container">
-    <div class="card text-center mt-4 p-3 border-2 border border-primary"  id="container" >
-        <div class="row">
+<main class="container ">
+    <div class="card text-center mt-4">
+        <div class="row p-3">
             <div class="col-md-5">
-                <img src="https://fight.ru/wp-content/uploads/2022/07/999f412d50215fc11045a7cb420bc719-scaled.jpg" alt="" class="card-img-bottom rounded">
+                <img src="{{ .Article.Image }}" alt="" class="card-img-bottom border rounded">
             </div>
             <div class="col-md-7">
                 <div class="card-body text-start">
-                    <h1 class="card-title">{{ .Article.Title }}</h1>
-                    <h3 class="card-title">{{ .Article.Title }}</h3>
-                    <p class="card-text">{{ .Article.Content }}</p>
+                    <h5 class="card-title">{{ .Article.Title }}</h5>
+                    <p class="card-text fst-italic">{{ .Article.CreateAt.UTC.Format "2006-01-02"  }}</p>
+                    <p class="card-text">{{ .Article.Subtitle }}</p>
+                    <div class="img-fluid">
+                        {{ .Article.Content }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,6 +29,13 @@
         </div>
     </div>
 </main>
+
+<script>
+    $(document).ready(function() {
+        // Найти изображения в тексте и добавить к ним класс
+        $('img').addClass('img-fluid');
+    });
+</script>
 
 {{template "footer" }}
 {{end}}

@@ -7,16 +7,27 @@
     {{template "header" }}
 
     <div class="container mt-3">
-        <input type="text" id="title" placeholder="Введите название статьи" class="form-control"><br>
-        <input type="text" id="subtitle" placeholder="Введите подзаголовок статьи" class="form-control"><br>
-        <input type="text" id="createAt" class="form-control mb-3" placeholder="Введите подзаголовок статьи" value="" readonly>
-            <h3>Выбор темы</h3>
+        <p>Выберите изображение для статьи:</p>
+        <div class="mb-3">
+            <input type="file" id="imageInput" class="form-control" accept="image/*">
+        </div>
+        <input type="text" id="title" placeholder="Введите название статьи" class="form-control" required><br>
+        <input type="text" id="subtitle" placeholder="Введите подзаголовок статьи" class="form-control" required><br>
+        <input type="text" id="createAt" class="form-control md-2" placeholder="Введите подзаголовок статьи" value="" readonly>
+        <div class="form-check md-3 ">
+            <input class="form-check-input "  type="checkbox" value="" id="flexCheckDefault" title="Сделать публичным?">
+            <label class="formmd-2-check-label" for="flexCheckDefault">
+                Сделать публичным
+            </label>
+        </div>
+
+        <h3>Выбор темы</h3>
         <label for="theme" class=" mb-3" >Выберите тему:</label>
 
         <div id="theme" class="themesArticle">
-        {{range $index, $item := . }}
-            <button class = "colorThemes me-2 mb-4" style="background-color: {{ $item.Color }};" onclick="selectTheme('{{$item.Id}}')"></button>
-        {{end}}
+            {{range $index, $item := . }}
+                <button class = "colorThemes me-2 mb-4" style="background-color: {{ $item.Color }};" onclick="selectTheme('{{$item.Id}}')"></button>
+            {{end}}
         </div>
         <script>
             // Получить текущую дату
@@ -96,81 +107,59 @@
             // Здесь вы можете обрабатывать изменения текста
             console.log('Text changed:', delta);
         });
-        // Получение кнопки по ее ID
-        var saveButton = document.getElementById('saveButton');
 
 
-        // Добавление обработчика события на клик кнопки
-        saveButton.addEventListener('click', function() {
-            titleInput = document.getElementById("title")
-            subtitleInput = document.getElementById("subtitle")
-            createAtInput = document.getElementById("createAt")
-            editorContent = quill.root.innerHTML;
+        // Обработчик события для кнопки сохранения
+        document.getElementById("saveButton").addEventListener("click", function () {
 
-            if (titleInput.value.trim() === '' || subtitleInput.value.trim() === '' || createAtInput.value.trim() === '' || editorContent.trim() === '') {
-                alert('Пожалуйста, заполните все поля.');
-                return; // Не выполняем отправку данных
-            }else {
-                // Вызов функции sendArticleContent при клике
-                sendArticleContent();
-            }
-        });
-        // Получение содержимого редактора
-        function getEditorContent() {
-            var content = quill.root.innerHTML;
-            console.log('Editor content:', content);
-        }
+            const fileInput = document.getElementById('imageInput');
+            var titleInput = document.getElementById("title");
+            var subtitleInput = document.getElementById("subtitle");
+            var createAtInput = document.getElementById("createAt");
+            const radioButton = document.getElementById('flexCheckDefault');
 
-        // Установка содержимого редактора
-        function sendArticleContent() {
-            // Получение содержимого редактора
-            var content = quill.root.innerHTML;
-            var titleInput = document.getElementById('title');
-            var Subtitle = document.getElementById('subtitle');
-            var CreateAt = document.getElementById('createAt');
-            var theme = selectedTheme.id;
-
-// Получение значения из элемента
-            var SubtitleValue = Subtitle.value;
-            var CreateAtValue = CreateAt.value;
-            var titleValue = titleInput.value;
+            var formData = new FormData();
 
             console.log(titleValue)
 
-            // Создание объекта для отправки данных
-            var data = {
-                Title:titleValue,
-                Subtitle: SubtitleValue,
-                Content: content,
-                Theme: theme,
-                CreateAt: CreateAtValue,
-            };
+            if (radioButton.checked) {
+                formData.append("public", true)
+            }else {
+                formData.append("public", false)
+            }
+            // Получаем значения из других полей (title, subtitle, createAt, content)
+            var title = titleInput.value;
+            var subtitle = subtitleInput.value;
+            var createAt = createAtInput.value;
+            var editorContent = quill.root.innerHTML; // Если это поле для ввода текста
+            var selectedFile = fileInput.files[0];
 
-            // Опции для POST-запроса
-            var options = {
+            // Добавляем все данные в объект FormData
+            formData.append("title", title);
+            formData.append("subtitle", subtitle);
+            formData.append("createAt", createAt);
+            formData.append("content", editorContent);
+            formData.append("image", selectedFile);
+
+            // Отправляем formData на сервер
+            fetch('/articles', {
                 method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
+                body: formData
+            }).then(function (response) {
+                if (response.ok) {
+                    // Данные успешно отправлены
+                    console.log('Статья успешно создана.');
+                } else {
+                    // Обработка ошибки
+                    console.error('Произошла ошибка при создании статьи.');
                 }
-            };
+            }).catch(function (error) {
+                console.error('Ошибка при отправке данных:', error);
+            });
 
-            // Отправка POST-запроса
-            fetch('/articles', options)
-                .then(function(response) {
-                    if (response.status === 201) {
-                        console.log('Статья успешно создана и сохранена!');
-                    } else {
-                        console.error('Ошибка при создании статьи:', response.statusText);
-                    }
-                })
-                .catch(function(error) {
-                    console.error('Ошибка при отправке запроса:', error);
-                });
-            document.location.href = "/"
-        }
+            document.location.href = '/';
+        });
     </script>
-
 
     {{template "footer" }}
 
