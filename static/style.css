@@ -5,6 +5,11 @@
 .themesArticle{
     display: flex;
 }
+.centrium{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
 .colorThemes{
     border: 1px solid black;
     border-radius: 50px ;

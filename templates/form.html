@@ -14,7 +14,7 @@
         <input type="text" id="title" placeholder="Введите название статьи" class="form-control" required><br>
         <input type="text" id="subtitle" placeholder="Введите подзаголовок статьи" class="form-control" required><br>
         <input type="text" id="createAt" class="form-control md-2" placeholder="Введите подзаголовок статьи" value="" readonly>
-        <div class="form-check md-3 ">
+        <div class="form-check md-2 ">
             <input class="form-check-input "  type="checkbox" value="" id="flexCheckDefault" title="Сделать публичным?">
             <label class="formmd-2-check-label" for="flexCheckDefault">
                 Сделать публичным
@@ -30,14 +30,16 @@
             {{end}}
         </div>
         <script>
-            // Получить текущую дату
+            function openModal() {
+                $('#myModal').modal('show');
+            }
             var currentDate = new Date();
 
             // Форматировать дату в строку (например, "dd.mm.yyyy")
             var formattedDate = currentDate.getDate() + '.' + (currentDate.getMonth() + 1) + '.' + currentDate.getFullYear();
 
             // Установить отформатированную дату в поле ввода
-            document.getElementById("CreateAt").value = formattedDate;
+            document.getElementById("createAt").value = formattedDate;
 
             function closeModal() {
                 $('#myModal').modal('hide');
@@ -48,6 +50,26 @@
         <button class="btn btn-primary mt-2" id="saveButton">Добавить</button>
     </div>
 
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Добавление статьи</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="successMessage">Статья успешно создана.</p>
+                    <p>Сгенерированная ссылка: <a href="#" id="generatedLink">Ссылка</a></p>
+                    <div class="img-fluid " >
+                        <img src="#" alt="QR Code" id="QRCode" class="img-fluid">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="saveArticle">Загрузить QR-код</button>
+                    <button type="button" class="btn btn-primary" id="goToHomepage">На главную</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
@@ -130,6 +152,7 @@
 
         // Установка содержимого редактора
         function sendArticleContent() {
+
             // Получение содержимого редактора
             const fileInput = document.getElementById('imageInput');
             var titleInput = document.getElementById("title");
@@ -138,13 +161,7 @@
             const radioButton = document.getElementById('flexCheckDefault');
 
 
-            var formData = new FormData();
 
-            if (radioButton.checked) {
-                formData.append("public", true)
-            }else {
-                formData.append("public", false)
-            }
             // Получаем значения из других полей (title, subtitle, createAt, content)
             var title = titleInput.value;
             var theme = selectedTheme.id;
@@ -152,6 +169,21 @@
             var createAt = createAtInput.value;
             var editorContent = quill.root.innerHTML; // Если это поле для ввода текста
             var selectedFile = fileInput.files[0];
+
+            console.log("Selected theme ID:", selectedTheme.id);
+            console.log("Title:", title);
+            console.log("Subtitle:", subtitle);
+            console.log("CreateAt:", createAt);
+            console.log("Editor content:", editorContent);
+            console.log("Selected file:", selectedFile);
+
+            const formData = new FormData();
+
+            if (radioButton.checked) {
+                formData.append("public", true)
+            }else {
+                formData.append("public", false)
+            }
 
             // Добавляем все данные в объект FormData
             formData.append("title", title);
@@ -161,30 +193,12 @@
             formData.append("image", selectedFile);
             formData.append("theme", theme);
 
-            // Отправляем formData на сервер
-            fetch('/articles', {
-                method: 'POST',
-                body: formData
-            }).then(function (response) {
-                if (response.ok) {
-                    // Данные успешно отправлены
-                    console.log('Статья успешно создана.');
-                } else {
-                    // Обработка ошибки
-                    console.error('Произошла ошибка при создании статьи.');
-                }
-            }).catch(function (error) {
-                console.error('Ошибка при отправке данных:', error);
-            });
+            console.log(title)
 
         var options = {
             method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            body: formData,
         };
-
         // Отправка POST-запроса
         fetch('/articles', options)
             .then(function(response) {
@@ -192,6 +206,7 @@
                     response.json().then(function(data) {
                         console.log(data);
                         const articleUrl = data.Url;
+                        console.log(data)
 
                         // Устанавливаем URL в элемент с id "generatedLink"
                         const generatedLink = document.getElementById('generatedLink');
@@ -233,26 +248,7 @@
 
     </script>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Добавление статьи</h5>
-                </div>
-                <div class="modal-body">
-                    <p id="successMessage">Статья успешно создана.</p>
-                    <p>Сгенерированная ссылка: <a href="#" id="generatedLink">Ссылка</a></p>
-                    <div class="modal-container">
-                        <img src="#" alt="QR Code" id="QRCode" class="img-fluid">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="saveArticle">Загрузить QR-код</button>
-                    <button type="button" class="btn btn-primary" id="goToHomepage">На главную</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <script>
         // Обработчик клика по кнопке "Сохранить" в модальном окне
         document.getElementById('saveArticle').addEventListener('click', function() {
