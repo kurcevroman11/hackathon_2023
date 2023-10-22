@@ -1,4 +1,4 @@
-# Web application for articles
+# SebbeastsNews
 
 ________
 
@@ -8,16 +8,23 @@ ________
 ![GitHub forks](https://img.shields.io/github/forks/kurcevroman11/hackathon_2023)
 
 
+### Краткое описание приложения:
+SebbeastsNews - это веб приложение предназначеное для публикации и простмотра опубокликованных статьей.
+
 ### Для запуска приложения:
 
 ```
+docker/test_env$ docker-compose up
 go run cmd/main.go
 ```
 
 ### Swagger API Documentation
 
-To view the Swagger documentation, [click here](/swagger-ui/).
+To view the Swagger documentation, [click here](/docs/swagger.json).
 
 
+### Contributing
 
+____
 
+Сообщения об ошибках и/или запросы на включение приветствуются.
