@@ -8,10 +8,10 @@ WORKDIR /articles-service
 # Установка Git
 RUN apk --no-cache add git
 
-COPY ../../configs /articles-service/configs
+COPY ./configs /articles-service/configs
 
 # Копируем файлы проекта и выполняем сборку
-COPY ../../go.mod ../../go.sum ./
+COPY ./go.mod ./go.sum ./
 
 RUN go mod download
 
