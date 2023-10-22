@@ -20,8 +20,7 @@ go run cmd/main.go
 
 ### Swagger API Documentation
 
-To view the Swagger documentation, [click here](/docs/swagger.json).
-
+To view the Swagger documentation, [click here](./docs/swagger.json).
 
 ### Contributing
 
