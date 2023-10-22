@@ -93,16 +93,14 @@
                             editor.style.backgroundColor = selectedTheme.color                        });
 
                     } else {
-                        console.error('Ошибка при отправке запроса на сервер:', response.statusText);
+                        console.error('Ошибка отправки запроса на сервер:', response.statusText);
                         return null;
                     }
                 })
 
                 .catch(function(error) {
-                    console.error('Ошибка при получении данных с сервера:', error);
+                    console.error('Ошибка получения данных с сервера:', error);
                 });
-
-            // При необходимости вы можете также обновить пользовательский интерфейс, чтобы указать выбранную тему.
         }
 
         var quill = new Quill('#editor', {
@@ -227,17 +225,17 @@
                         const generatedLink = document.getElementById('generatedLink');
                         generatedLink.href = articleUrl;
                         generatedLink.innerHTML = articleUrl;
-                        // Здесь вы можете обращаться к данным, например, data.id, data.title и т. д.
+
                         var qrCodeImg = document.getElementById("QRCode");
                         qrCodeImg.src = data.Article.QRCode;
                     });
                     console.log('Статья успешно создана и сохранена!');
                 } else {
-                    console.error('Ошибка при создании статьи:', response.statusText);
+                    console.error('Ошибка создания статьи:', response.statusText);
                 }
             })
             .catch(function(error) {
-                console.error('Ошибка при отправке запроса:', error);
+                console.error('Ошибка отправки запроса:', error);
             });
         }
     </script>
@@ -265,15 +263,11 @@
 
 
     <script>
-        // Обработчик клика по кнопке "Сохранить" в модальном окне
         document.getElementById('saveArticle').addEventListener('click', function() {
-            // Закройте модальное окно
             closeModal();
-
-            // Отобразите информацию после создания статьи
             showSuccessMessage();
-            showGeneratedLink('https://example.com/your-article-link'); // Замените на фактическую ссылку
-            showGeneratedQRCode('https://example.com/your-article-link'); // Замените на фактическую ссылку
+            showGeneratedLink('https://example.com/your-article-link');
+            showGeneratedQRCode('https://example.com/your-article-link');
         });
     </script>
 

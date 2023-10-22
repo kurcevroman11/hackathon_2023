@@ -15,9 +15,9 @@
         </div>
         <div class="col-md-7">
           <div class="card-body text-start">
-            <h5 class="card-title ">{{ .Title }}</h5>
+            <h1 class="card-title ">{{ .Title }}</h1>
             <p class="card-text fst-italic">{{ .PublicationDate  }}</p>
-            <p class="card-text">{{ .Subtitle }}</p>
+            <h3 class="card-text">{{ .Subtitle }}</h3>
             <a href="articles/{{index $.Urls $index}}" class="btn btn-primary">Read article</a>
           </div>
         </div>
