@@ -60,6 +60,10 @@
                     container.style.backgroundColor = 'lightgray';
                 }
             }
+
+            function openModal() {
+                $('#myModal').modal('show');
+            }
         </script>
 
 
@@ -72,7 +76,12 @@
 
             // Установить отформатированную дату в поле ввода
             document.getElementById("CreateAt").value = formattedDate;
+
+            function closeModal() {
+                $('#myModal').modal('hide');
+            }
         </script>
+
         <div id="editor" name="editor" placeholder="Введите текст статьи" class="h-50 p3 "></div>
         <button class="btn btn-primary mt-2" id="saveButton">Добавить</button>
     </div>
@@ -117,8 +126,8 @@
 
         // Добавление обработчика события на клик кнопки
         saveButton.addEventListener('click', function() {
-            // Вызов функции sendArticleContent при клике
-            sendArticleContent();
+            sendArticleContent()
+            openModal();
         });
         // Получение содержимого редактора
         function getEditorContent() {
@@ -165,6 +174,18 @@
             fetch('/articles', options)
                 .then(function(response) {
                     if (response.status === 201) {
+                        response.json().then(function(data) {
+                            console.log(data);
+                            const articleUrl = data.Url;
+
+                            // Устанавливаем URL в элемент с id "generatedLink"
+                            const generatedLink = document.getElementById('generatedLink');
+                            generatedLink.href = articleUrl;
+                            generatedLink.innerHTML = articleUrl;
+                            // Здесь вы можете обращаться к данным, например, data.id, data.title и т. д.
+                            var qrCodeImg = document.getElementById("QRCode");
+                            qrCodeImg.src = data.Article.QRCode;
+                        });
                         console.log('Статья успешно создана и сохранена!');
                     } else {
                         console.error('Ошибка при создании статьи:', response.statusText);
@@ -173,9 +194,93 @@
                 .catch(function(error) {
                     console.error('Ошибка при отправке запроса:', error);
                 });
-            document.location.href = "/"
         }
     </script>
+
+    <script>
+        function showSuccessMessage() {
+            document.getElementById('successMessage').style.display = 'block';
+        }
+
+        function showGeneratedLink(link) {
+            var generatedLink = document.getElementById('generatedLink');
+            generatedLink.href = link;
+            generatedLink.innerHTML = link;
+        }
+
+        function showGeneratedQRCode(qrCodeData) {
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: qrCodeData,
+                width: 128,
+                height: 128
+            });
+        }
+
+
+    </script>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Добавление статьи</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="successMessage">Статья успешно создана.</p>
+                    <p>Сгенерированная ссылка: <a href="#" id="generatedLink">Ссылка</a></p>
+                    <div class="modal-container">
+                        <img src="#" alt="QR Code" id="QRCode" class="img-fluid">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="saveArticle">Загрузить QR-код</button>
+                    <button type="button" class="btn btn-primary" id="goToHomepage">На главную</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Обработчик клика по кнопке "Сохранить" в модальном окне
+        document.getElementById('saveArticle').addEventListener('click', function() {
+            // Закройте модальное окно
+            closeModal();
+
+            // Отобразите информацию после создания статьи
+            showSuccessMessage();
+            showGeneratedLink('https://example.com/your-article-link'); // Замените на фактическую ссылку
+            showGeneratedQRCode('https://example.com/your-article-link'); // Замените на фактическую ссылку
+        });
+    </script>
+
+    <script>
+        // Находим элементы на странице
+        const qrCodeImage = document.getElementById("QRCode");
+        const loadButton = document.getElementById("saveArticle");
+
+        // Добавляем обработчик события клика на кнопку
+        loadButton.addEventListener("click", function() {
+            // Создаем временную ссылку для скачивания
+            const a = document.createElement("a");
+            a.href = qrCodeImage.src;
+            a.download = "QRCode.png"; // Имя файла, который будет скачан
+
+            // Добавляем ссылку в документ, эмулируем клик и удаляем ссылку
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    </script>
+
+    <script>
+        const goToHomepageButton = document.getElementById("goToHomepage");
+
+        // Добавляем обработчик события клика на кнопке
+        goToHomepageButton.addEventListener("click", function() {
+            // Перенаправляем на главную страницу
+            window.location.href = "http://localhost:8000"; // Замените "/" на путь к вашей главной странице
+        });
+    </script>
+</body>
 
     {{template "footer" }}
 

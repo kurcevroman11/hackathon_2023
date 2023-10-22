@@ -43,6 +43,7 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	articleId := chi.URLParam(r, "ID")
+
 	article, err := h.services.ArticleService.GetById(articleId)
 	if err != nil {
 		log.Print("err :", err.Error())
@@ -88,10 +89,43 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 		DeletedAt: nil,
 	}
 
-	h.services.ArticleService.Create(&article)
+	create, err := h.services.ArticleService.Create(&article)
+	if err != nil {
+		return
+	}
+
+	titleURL := strings.ReplaceAll(strings.ToLower(article.Title), " ", "-")
+	titleURL = Transliterate(titleURL)
+
+	// Форматирование даты публикации в строку "2006-01-02"
+	dateStr := article.CreateAt.Format("2006-01-02")
+
+	// Конкатенация заголовка и даты для создания URL
+	articleURL := "http://" + r.Host + "/articles/" + article.ID + "/" + titleURL + "-" + dateStr
+
+	err = h.services.ArticleService.GenerateQRCode(articleURL, create)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	data := struct {
+		Article *models.Article
+		Url     string
+	}{
+		Article: create,
+		Url:     articleURL,
+	}
+
+	jsonData, err := json.Marshal(data)
+
+	if err != nil {
+		// Обработка ошибки
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	// Отправить ответ клиенту
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Статья успешно создана и сохранена!"))
+	w.Write(jsonData)
 }
 func (h *Handler) UpdateArticle(w http.ResponseWriter, r *http.Request) {
 
@@ -156,6 +190,48 @@ func (h *Handler) inputPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.ExecuteTemplate(w, "index", thems)
+}
+
+func (h *Handler) getQR(w http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	article, err := h.services.ArticleService.GetById(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	titleURL := strings.ReplaceAll(strings.ToLower(article.Title), " ", "-")
+	titleURL = Transliterate(titleURL)
+
+	// Форматирование даты публикации в строку "2006-01-02"
+	dateStr := article.CreateAt.Format("2006-01-02")
+
+	host := r.URL.Host + r.URL.Port()
+	// Конкатенация заголовка и даты для создания URL
+	articleURL := host + "/" + article.ID + "/" + titleURL + "-" + dateStr
+
+	err = h.services.ArticleService.GenerateQRCode(articleURL, article)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data := struct {
+		QRCode string
+		Url    string
+	}{
+		QRCode: article.QRCode,
+		Url:    articleURL,
+	}
+
+	result, err := json.Marshal(data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Write(result)
 }
 
 func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
