@@ -2,8 +2,8 @@ port: "8000"
 
 db:
     username: "section"
-    host: "db"
-    port: "5432"
+    host: "localhost"
+    port: "5433"
     dbname: "section"
     sslmode: "disable"
     password: "section"

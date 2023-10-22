@@ -19,9 +19,9 @@ import (
 	"github.com/zhashkevych/todo-app/pkg/service"
 )
 
-// @title Todo App API
+// @title SebbeastsNews API
 // @version 1.0
-// @description API Server for TodoList Application
+// @description API Server for SebbeastsNews Application
 
 // @host localhost:8000
 // @BasePath /

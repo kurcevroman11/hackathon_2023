@@ -76,8 +76,8 @@ definitions:
 host: localhost:8000
 info:
   contact: {}
-  description: API Server for TodoList Application
-  title: Todo App API
+  description: API Server for SebbeastsNews Application
+  title: SebbeastsNews API
   version: "1.0"
 paths:
   /articles:
