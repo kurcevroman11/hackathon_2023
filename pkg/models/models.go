@@ -41,9 +41,8 @@ type Article struct {
 }
 
 type Theme struct {
-	Id   string
-	Name string
-	R    int
-	G    int
-	B    int
+	Id    string `json:"id"`
+	Name  string `json:"name"`
+	Color string `json:"color"`
+	Image string `json:"image"`
 }

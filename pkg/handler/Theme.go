@@ -22,12 +22,14 @@ func (h *Handler) GetTheme(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) GetThemeByID(w http.ResponseWriter, r *http.Request) {
 	themeID := chi.URLParam(r, "ID")
 
-	thema, err := h.services.ThemeService.GetById(themeID)
+	theme, err := h.services.ThemeService.GetById(themeID)
 	if err != nil {
 		return
 	}
 
-	result, err := json.Marshal(thema)
+	w.Header().Set("Content-Type", "application/json")
+
+	result, err := json.Marshal(theme)
 	if err != nil {
 		return
 	}

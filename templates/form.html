@@ -8,61 +8,16 @@
 
     <div class="container mt-3">
         <input type="text" id="title" placeholder="Введите название статьи" class="form-control"><br>
-        <input type="text" id="Subtitle" placeholder="Введите подзаголовок статьи" class="form-control"><br>
-        <input type="text" id="CreateAt" class="form-control mb-3" placeholder="Введите подзаголовок статьи" value="" readonly>
+        <input type="text" id="subtitle" placeholder="Введите подзаголовок статьи" class="form-control"><br>
+        <input type="text" id="createAt" class="form-control mb-3" placeholder="Введите подзаголовок статьи" value="" readonly>
             <h3>Выбор темы</h3>
         <label for="theme" class=" mb-3" >Выберите тему:</label>
 
-        <select id="theme" class="rounded border border-rounded-2">
+        <div id="theme" class="themesArticle">
         {{range $index, $item := . }}
-                <option value="{{$item.Id}}" class="rounded border border-rounded-2">{{$item.Name}}</option>
-            {{end}}
-        </select>
-
-        <script>
-            const themeSelect = document.getElementById('theme');
-            const body = document.body;
-            const container = document.querySelector('.container');
-
-            themeSelect.addEventListener('change', function() {
-                const selectedTheme = themeSelect.value;
-                applyTheme(selectedTheme);
-            });
-
-            function applyTheme(theme) {
-                const selectedOption = themeSelect.querySelector(`[value="${theme}"]`);
-// Получить элемент с идентификатором "editor"
-                const editorElement = document.getElementById('editor');
-
-// Установить новый цвет фона (например, красный)
-
-                if (selectedOption) {
-                    // Разбиваем значение "value" на массив, разделяя его запятыми и преобразуя в числа
-                    const themeId = selectedOption.value;
-
-                    var thems
-
-                    fetch(`http://localhost:8000/theme/${themeId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Обработка данных, полученных от сервера
-                            console.log(data);
-                            thems  = data
-                            editorElement.style.backgroundColor = `rgb(${thems.R},${thems.G},${thems.B}, 0.6)`                        })
-                        .catch(error => {
-                            console.error('Ошибка при запросе данных:', error);
-                        });
-
-
-                } else {
-                    body.style.backgroundColor = 'white';
-                    body.style.color = 'black';
-                    container.style.backgroundColor = 'lightgray';
-                }
-            }
-        </script>
-
-
+            <button class = "colorThemes me-2 mb-4" style="background-color: {{ $item.Color }};" onclick="selectTheme('{{$item.Id}}')"></button>
+        {{end}}
+        </div>
         <script>
             // Получить текущую дату
             var currentDate = new Date();
@@ -71,7 +26,7 @@
             var formattedDate = currentDate.getDate() + '.' + (currentDate.getMonth() + 1) + '.' + currentDate.getFullYear();
 
             // Установить отформатированную дату в поле ввода
-            document.getElementById("CreateAt").value = formattedDate;
+            document.getElementById("createAt").value = formattedDate;
         </script>
         <div id="editor" name="editor" placeholder="Введите текст статьи" class="h-50 p3 "></div>
         <button class="btn btn-primary mt-2" id="saveButton">Добавить</button>
@@ -80,7 +35,36 @@
 
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
+        var selectedTheme = {}; // Объект для хранения выбранной темы
 
+        function selectTheme(ID) {
+            // Отправить запрос на сервер
+            fetch(`/theme/${ID}`, { method: 'GET' })
+                .then(function(response) {
+                    if (response.status === 200) {
+                        response.json().then(function(data) {
+                                // Обновить selectedTheme на основе данных с сервера
+                                selectedTheme = {
+                                    id: ID,
+                                    name: data.name,
+                                    color: data.color,
+                                    image: data.image,
+                                };
+                                console.log(selectedTheme)
+
+                        });
+                    } else {
+                        console.error('Ошибка при отправке запроса на сервер:', response.statusText);
+                        return null;
+                    }
+                })
+
+                .catch(function(error) {
+                    console.error('Ошибка при получении данных с сервера:', error);
+                });
+
+            // При необходимости вы можете также обновить пользовательский интерфейс, чтобы указать выбранную тему.
+        }
 
         var quill = new Quill('#editor', {
             theme: 'snow', // Тема редактора (по умолчанию "snow")
@@ -117,8 +101,18 @@
 
         // Добавление обработчика события на клик кнопки
         saveButton.addEventListener('click', function() {
-            // Вызов функции sendArticleContent при клике
-            sendArticleContent();
+            titleInput = document.getElementById("title")
+            subtitleInput = document.getElementById("subtitle")
+            createAtInput = document.getElementById("createAt")
+            editorContent = document.getElementById("editor")
+
+            if (titleInput.value.trim() === '' || subtitleInput.value.trim() === '' || createAtInput.value.trim() === '' || editorContent.trim() === '') {
+                alert('Пожалуйста, заполните все поля.');
+                return; // Не выполняем отправку данных
+            }else {
+                // Вызов функции sendArticleContent при клике
+                sendArticleContent();
+            }
         });
         // Получение содержимого редактора
         function getEditorContent() {
@@ -133,12 +127,11 @@
             var titleInput = document.getElementById('title');
             var Subtitle = document.getElementById('Subtitle');
             var CreateAt = document.getElementById('CreateAt');
-            var theme = document.getElementById('theme');
+            var theme = selectedTheme;
 
 // Получение значения из элемента
             var SubtitleValue = Subtitle.value;
             var CreateAtValue = CreateAt.value;
-            var themeValue = theme.value;
             var titleValue = titleInput.value;
 
             console.log(titleValue)
@@ -148,7 +141,7 @@
                 Title:titleValue,
                 Subtitle: SubtitleValue,
                 Content: content,
-                Theme: themeValue,
+                Theme: theme,
                 CreateAt: CreateAtValue,
             };
 
@@ -176,6 +169,7 @@
             document.location.href = "/"
         }
     </script>
+
 
     {{template "footer" }}
 

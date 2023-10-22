@@ -27,11 +27,10 @@ func (t ThemeServiceImpl) Create(theme *models.Theme) (*models.Theme, error) {
 func (t ThemeServiceImpl) FakeDate() (*models.Theme, error) {
 
 	theme := &models.Theme{
-		Id:   t.gen.GenerateUUID(),
-		Name: "Темная тема",
-		R:    10,
-		G:    0,
-		B:    20,
+		Id:    t.gen.GenerateUUID(),
+		Name:  "Темная тема",
+		Color: "#111111",
+		Image: "C:\\Users\\sergk\\OneDrive\\Изображения\\Feedback\\{2A9C1923-8716-464B-8EF0-A8A7F1ADF3BB}",
 	}
 	return t.rep.ThemeRepository.Create(theme)
 
