@@ -96,7 +96,11 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("content")
 	article.Content = content
 	theme := r.FormValue("theme")
-	article.ThemeId = theme
+	if theme != "" {
+		article.ThemeId = "fef43f09-9b56-ad41-8c46-5a01b542ce27"
+	} else {
+		article.ThemeId = theme
+	}
 	public := r.FormValue("public")
 	if public == "true" {
 		article.Public = true
