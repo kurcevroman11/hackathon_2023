@@ -3,7 +3,7 @@ module github.com/zhashkevych/todo-app
 go 1.14
 
 require (
-	github.com/PuerkitoBio/goquery v1.8.1 // indirect
+	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gin-gonic/gin v1.9.0

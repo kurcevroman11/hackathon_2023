@@ -120,8 +120,6 @@
 
             var formData = new FormData();
 
-            console.log(titleValue)
-
             if (radioButton.checked) {
                 formData.append("public", true)
             }else {
@@ -129,6 +127,7 @@
             }
             // Получаем значения из других полей (title, subtitle, createAt, content)
             var title = titleInput.value;
+            var theme = selectedTheme.id;
             var subtitle = subtitleInput.value;
             var createAt = createAtInput.value;
             var editorContent = quill.root.innerHTML; // Если это поле для ввода текста
@@ -140,6 +139,7 @@
             formData.append("createAt", createAt);
             formData.append("content", editorContent);
             formData.append("image", selectedFile);
+            formData.append("theme", theme);
 
             // Отправляем formData на сервер
             fetch('/articles', {

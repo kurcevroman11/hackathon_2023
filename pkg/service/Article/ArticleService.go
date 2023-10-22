@@ -55,6 +55,11 @@ func (a ArticleService) GetById(id string) (*models.Article, error) {
 		return nil, err
 	}
 	article.Theme = *thems
+	file, err := a.rep.FileRepository.GetById(article.FileId)
+	if err != nil {
+		return nil, err
+	}
+	article.ImgFile = *file
 	return article, err
 
 }
@@ -74,7 +79,6 @@ func (a ArticleService) FakeData() (*models.Article, error) {
 		Title:           "<h1>Test_Title</h1>",
 		Content:         "Test_Title",
 		PublicationDate: "Test_Data",
-		AuthorID:        "",
 		CreateAt:        time.Time{},
 		UpdatedAt:       time.Time{},
 		DeletedAt:       nil,
@@ -105,7 +109,6 @@ func (a ArticleService) GetImage(r *http.Request) (*models.File, error) {
 	r.ParseMultipartForm(int64(maxFileSize))
 	file, handler, err := r.FormFile("image")
 	if err != nil {
-
 		return nil, errors.New("Не удается получить файл")
 	}
 	defer file.Close()
@@ -116,6 +119,7 @@ func (a ArticleService) GetImage(r *http.Request) (*models.File, error) {
 	// Создаем новый файл для сохранения изображения на сервере
 	path := "./img/"
 	newFileName := path + id + fileExt
+	newFileName2 := "/img/" + id + fileExt
 	newFile, err := os.Create(newFileName)
 	if err != nil {
 		return nil, errors.New("Не удается создать файл для сохранения изображения")
@@ -130,7 +134,7 @@ func (a ArticleService) GetImage(r *http.Request) (*models.File, error) {
 	localfile := &models.File{
 		Id:        id,
 		Name:      handler.Filename,
-		Path:      newFileName,
+		Path:      newFileName2,
 		DeletedAt: nil,
 	}
 	// В этом моменте, изображение сохранено на сервере с именем newFileName

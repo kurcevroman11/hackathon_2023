@@ -2,14 +2,13 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/PuerkitoBio/goquery"
 	"github.com/alecthomas/template"
 	"github.com/go-chi/chi"
 	"github.com/zhashkevych/todo-app/pkg/models"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
-	"time"
 )
 
 // GetArticles @Summary Получить все статьи
@@ -69,6 +68,8 @@ func (h *Handler) CreateArticle(w http.ResponseWriter, r *http.Request) {
 	article.PublicationDate = createAt
 	content := r.FormValue("content")
 	article.Content = content
+	theme := r.FormValue("theme")
+	article.ThemeId = theme
 	public := r.FormValue("public")
 	if public == "true" {
 		article.Public = true
@@ -160,7 +161,7 @@ func (h *Handler) savePage(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("editor")
 
 	dest := models.Article{
-		Title: title, Content: content, AuthorID: "test"}
+		Title: title, Content: content}
 
 	if title == "" || content == "" {
 		http.Error(w, "Title and content cannot be empty", http.StatusBadRequest)
