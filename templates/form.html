@@ -140,9 +140,22 @@
 
         // Добавление обработчика события на клик кнопки
         saveButton.addEventListener('click', function() {
-            // Вызов функции sendArticleContent при клике
-            sendArticleContent();
-            openModal();
+            // Получение содержимого редактора
+            var titleInput = document.getElementById("title");
+            var subtitleInput = document.getElementById("subtitle");
+            var createAtInput = document.getElementById("createAt");
+
+
+            var editorContent = quill.root.innerHTML; // Если это поле для ввода текста
+
+            if (titleInput.value.trim() === '' || subtitleInput.value.trim() === '' || createAtInput.value.trim() === '' || editorContent.trim() === '') {
+                alert('Пожалуйста, заполните все поля.');
+                return; // Не выполняем отправку данных
+            }else {
+                sendArticleContent();
+                openModal();
+            }
+
         });
         // Получение содержимого редактора
         function getEditorContent() {
@@ -161,7 +174,6 @@
             const radioButton = document.getElementById('flexCheckDefault');
 
 
-
             // Получаем значения из других полей (title, subtitle, createAt, content)
             var title = titleInput.value;
             var theme = selectedTheme.id;
@@ -169,6 +181,9 @@
             var createAt = createAtInput.value;
             var editorContent = quill.root.innerHTML; // Если это поле для ввода текста
             var selectedFile = fileInput.files[0];
+
+
+
 
             console.log("Selected theme ID:", selectedTheme.id);
             console.log("Title:", title);

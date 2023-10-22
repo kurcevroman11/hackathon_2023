@@ -4,17 +4,17 @@
 
 <body>
 {{template "header_for_articlePage" }}
-<main class="container ">
-    <div class="card text-center mt-4">
+<main class="container">
+    <div class="card text-center mt-4" style="background: {{.Article.Theme.Color }}">
         <div class="row p-3">
             <div class="col-md-5">
                 <img src="{{.Article.ImgFile.Path}}" alt="Img" class="card-img-bottom border rounded">
             </div>
             <div class="col-md-7">
                 <div class="card-body text-start">
-                    <h5 class="card-title">{{ .Article.Title }}</h5>
+                    <h2 class="card-title">{{ .Article.Title }}</h2>
                     <p class="card-text fst-italic">{{ .Article.PublicationDate  }}</p>
-                    <p class="card-text">{{ .Article.Subtitle }}</p>
+                    <h3 class="card-text">{{ .Article.Subtitle }}</h3>
                     <div class="img-fluid">
                         {{ .Article.Content }}
                     </div>
