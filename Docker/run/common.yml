@@ -19,7 +19,7 @@ services:
 
   altair:
     extends:
-      file: ../../../../../fanzila/service-section/docker/test_env/docker-compose.yml
+      file: ../../../../../fanzila/service-section/Docker/test_env/Docker-compose.yml
       service: altair
     environment:
       - SERVER_URL=http://localhost:8080/graphql
