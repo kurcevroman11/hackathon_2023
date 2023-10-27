@@ -21,7 +21,7 @@ import (
 // @Router /articles [get]
 func (h *Handler) GetArticles(w http.ResponseWriter, r *http.Request) {
 	// Создание экземпляра структуры
-	data, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: false})
+	data, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: true})
 
 	// Преобразование структуры в JSON
 	jsonData, err := json.Marshal(data)
@@ -71,6 +71,27 @@ func (h *Handler) GetArticleByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl.ExecuteTemplate(w, "articles", data)
+}
+
+func (h *Handler) GetArticleByIDItem(w http.ResponseWriter, r *http.Request) {
+
+	articleId := chi.URLParam(r, "ID")
+
+	article, err := h.services.ArticleService.GetById(articleId)
+	if err != nil {
+		log.Print("err :", err.Error())
+		return
+	}
+	h.services.ArticleService.GenerateQRCode("http://"+r.Host+r.URL.String(), article)
+
+	data, err := json.Marshal(article)
+	if err != nil {
+		log.Print("err :", err.Error())
+		return
+	}
+
+	w.Write(data)
+
 }
 
 // CreateArticle is a handler function that creates a new article.
