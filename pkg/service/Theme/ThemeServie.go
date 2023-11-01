@@ -52,11 +52,6 @@ func (t ThemeServiceImpl) FakeDate() (*models.Theme, error) {
 		Name:  "Темная тема",
 		Color: "#6B6A66",
 	}
-	theme5 := &models.Theme{
-		Id:    "fef43f09-9b56-ad41-8c46-5a01b542ce27",
-		Name:  "По умолчанию",
-		Color: "#FFFFFF",
-	}
 
 	t.rep.ThemeRepository.Create(theme1)
 	t.rep.ThemeRepository.Create(theme2)

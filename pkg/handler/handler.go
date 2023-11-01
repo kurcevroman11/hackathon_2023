@@ -3,7 +3,8 @@ package handler
 import (
 	"github.com/go-chi/chi"
 	"github.com/rs/cors"
-	"github.com/swaggo/http-swagger"
+	httpSwagger "github.com/swaggo/http-swagger"
+
 	_ "github.com/zhashkevych/todo-app/docs"
 	"github.com/zhashkevych/todo-app/pkg/service"
 	"net/http"
