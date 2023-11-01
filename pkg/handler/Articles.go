@@ -243,10 +243,10 @@ func (h *Handler) MainPage(w http.ResponseWriter, r *http.Request) {
 	articles, err := h.services.ArticleService.GetAll(&models.FilterArticle{Public: true})
 
 	for _, article := range articles {
-		if len(article.Content) > 300 {
-			article.Content = article.Content[:300] + "..."
+		if len(article.Subtitle) > 150 {
+			article.Subtitle = article.Subtitle[:150] + "..."
 		}
-		article.Content = removeImagesFromContent(article.Content)
+		article.Subtitle = removeImagesFromContent(article.Subtitle)
 	}
 
 	var urls []string
